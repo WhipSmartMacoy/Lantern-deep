@@ -2,7 +2,7 @@
 
 An endless isometric dungeon crawler (Diablo / Torchlight style) for the Analogue Pocket, running on its own custom core with a hardware GPU ("Lantern GPU"). Also plays in a browser.
 
-**▶ Play it now (phone or computer): https://whipsmartmacoy.github.io/lantern-deep/**
+**▶ Play it now (phone or computer): https://whipsmartmacoy.github.io/Lantern-deep/**
 
 On a phone, use the on-screen buttons. On a computer, use the keyboard or a game controller. Your heroes are saved in that browser.
 
