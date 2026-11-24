@@ -1,0 +1,20 @@
+Fitter Status : Successful - Mon Nov 23 17:18:16 2026
+Quartus Prime Version : 21.1.1 Build 850 06/23/2022 SJ Lite Edition
+Revision Name : openFPGA-RISC-V_pocket
+Top-level Entity Name : apf_top
+Family : Cyclone V
+Device : 5CEBA4F23C8
+Timing Models : Final
+Logic utilization (in ALMs) : 14,418 / 18,480 ( 78 % )
+Total registers : 19570
+Total pins : 224 / 224 ( 100 % )
+Total virtual pins : 0
+Total block memory bits : 2,413,780 / 3,153,920 ( 77 % )
+Total RAM Blocks : 293 / 308 ( 95 % )
+Total DSP Blocks : 39 / 66 ( 59 % )
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 2 / 4 ( 50 % )
+Total DLLs : 0 / 4 ( 0 % )

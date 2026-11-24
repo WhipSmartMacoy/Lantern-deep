@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern Sprite Baker</title>
+<style>
+  :root { --bg:#121015; --panel:#1b1820; --edge:#2e2933; --ink:#e6ddd0; --dim:#8c8276; --amber:#f0b45a; --ok:#7fd88a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--edge); display: flex; align-items: baseline; gap: 14px; }
+  header h1 { margin: 0; font-size: 18px; color: var(--amber); letter-spacing: .5px; }
+  header span { color: var(--dim); }
+  main { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 52px); }
+  aside { border-right: 1px solid var(--edge); padding: 14px 16px 40px; overflow-y: auto; max-height: calc(100vh - 52px); }
+  section { margin-bottom: 18px; }
+  h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--amber); margin: 0 0 8px; }
+  label { display: grid; grid-template-columns: 112px 1fr 44px; align-items: center; gap: 8px; margin: 5px 0; color: var(--dim); }
+  label.wide { grid-template-columns: 112px 1fr; }
+  input[type=range] { width: 100%; accent-color: var(--amber); }
+  output { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+  select, input[type=text], input[type=number] { width: 100%; background: var(--panel); color: var(--ink); border: 1px solid var(--edge); border-radius: 6px; padding: 5px 7px; font: inherit; }
+  .file { display: block; border: 1px dashed #5a4d3c; border-radius: 10px; padding: 16px; text-align: center; color: var(--dim); cursor: pointer; }
+  .file:hover { border-color: var(--amber); color: var(--ink); }
+  .file input { display: none; }
+  .status { margin-top: 8px; color: var(--dim); font-size: 12px; min-height: 18px; }
+  .status.ok { color: var(--ok); }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  button { background: #3a2f22; color: var(--ink); border: 1px solid #6b5536; border-radius: 8px; padding: 8px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+  button.primary { background: var(--amber); color: #1b1408; border-color: var(--amber); }
+  button:disabled { opacity: .4; cursor: default; }
+  .stage { padding: 18px 22px; display: grid; gap: 18px; align-content: start; }
+  .row { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
+  .card { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px; padding: 12px; }
+  .card h3 { margin: 0 0 8px; font-size: 12px; color: var(--dim); font-weight: 600; }
+  canvas.px { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+  .checker { background-image: linear-gradient(45deg,#2a2630 25%,transparent 25%),linear-gradient(-45deg,#2a2630 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a2630 75%),linear-gradient(-45deg,transparent 75%,#2a2630 75%); background-size: 16px 16px; background-position: 0 0,0 8px,8px -8px,-8px 0; background-color: #1f1c24; }
+  .hint { color: var(--dim); font-size: 12px; max-width: 760px; }
+  .hint b { color: var(--ink); }
+  .pal { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 8px; max-width: 280px; }
+  .pal i { width: 12px; height: 12px; border-radius: 2px; display: block; }
+</style>
+</head>
+<body>
+<header><h1>Lantern Sprite Baker</h1><span>Gaussian splats &amp; 3D models → Lantern Deep pixel sprites</span></header>
+<main>
+<aside>
+  <section>
+    <h2>1 · Source</h2>
+    <label class="file" id="drop">Click or drop a file here<br><small>.ply splats or mesh · .splat · .glb · .obj</small><input type="file" id="file" accept=".ply,.splat,.glb,.gltf,.obj"></label>
+    <div class="status" id="status">No file loaded.</div>
+  </section>
+  <section>
+    <h2>2 · Target sprite</h2>
+    <label class="wide">Preset <select id="preset"></select></label>
+    <label class="wide">Sprite name <input type="text" id="name" value="i_sword"></label>
+    <label class="wide">Size (W × H) <span style="display:flex;gap:6px"><input type="number" id="w" value="16" min="4" max="192"><input type="number" id="h" value="16" min="4" max="192"></span></label>
+  </section>
+  <section>
+    <h2>3 · Camera &amp; framing</h2>
+    <label class="wide">View <select id="view">
+      <option value="d4">Top-down 3/4 (game camera)</option>
+      <option value="iso">Isometric (old camera)</option>
+      <option value="icon">Three-quarter (item icons)</option>
+      <option value="front">Front</option>
+      <option value="top">Top-down</option>
+    </select></label>
+    <label class="wide">Up axis <select id="up">
+      <option value="y">Y up</option><option value="-y">Y down (many splat captures)</option><option value="z">Z up</option><option value="-z">Z down</option>
+    </select></label>
+    <label>Turn <input type="range" id="yaw" min="-180" max="180" value="0"><output></output></label>
+    <label>Tilt <input type="range" id="pitch" min="-90" max="90" value="0"><output></output></label>
+    <label>Roll <input type="range" id="roll" min="-180" max="180" value="0"><output></output></label>
+    <label>Zoom % <input type="range" id="zoom" min="30" max="400" value="100"><output></output></label>
+    <label>Shift X <input type="range" id="offx" min="-50" max="50" value="0"><output></output></label>
+    <label>Shift Y <input type="range" id="offy" min="-50" max="50" value="0"><output></output></label>
+    <label class="wide">Anchor <select id="anchor"><option value="center">Centered</option><option value="feet">Feet on the bottom (characters)</option><option value="tile">Exact tile (1×1 footprint)</option><option value="fixed">Fixed scale &amp; origin (animation sets)</option></select></label>
+    <label class="wide">Fixed scale <span style="display:flex;gap:6px"><input type="number" id="fs" value="9" step="0.5" title="pixels per unit"><input type="number" id="fox" value="8" title="origin x"><input type="number" id="foy" value="22" title="origin y"></span></label>
+  </section>
+  <section>
+    <h2>4 · Clean up the capture</h2>
+    <label>Keep radius % <input type="range" id="crop" min="5" max="100" value="100"><output></output></label>
+    <label class="wide">Remove floor <select id="floorauto"><option value="0">Off</option><option value="1">Detect &amp; remove the floor plane</option></select></label>
+    <label>Cut bottom % <input type="range" id="floor" min="0" max="90" value="0"><output></output></label>
+    <label>Max blob size <input type="range" id="maxblob" min="2" max="40" value="40"><output></output></label>
+    <label>Min opacity % <input type="range" id="minop" min="0" max="95" value="10"><output></output></label>
+    <label>Splat size % <input type="range" id="ssize" min="30" max="300" value="100"><output></output></label>
+    <div class="btns"><button id="autocrop">Auto-crop to object</button></div>
+  </section>
+  <section>
+    <h2>5 · Look</h2>
+    <label>Brightness <input type="range" id="bright" min="30" max="250" value="100"><output></output></label>
+    <label>Contrast <input type="range" id="contrast" min="50" max="200" value="115"><output></output></label>
+    <label>Saturation <input type="range" id="sat" min="0" max="250" value="120"><output></output></label>
+    <label class="wide">Model lighting <select id="lit"><option value="unlit">Captured colors (unlit)</option><option value="lit">Lit (plain models)</option></select></label>
+    <label>Light angle <input type="range" id="light" min="-180" max="180" value="-45"><output></output></label>
+  </section>
+  <section>
+    <h2>6 · Pixel style</h2>
+    <label>Colors <input type="range" id="colors" min="0" max="48" value="12"><output></output></label>
+    <label>Edge cutoff % <input type="range" id="cutoff" min="10" max="90" value="45"><output></output></label>
+    <label class="wide">Outline <select id="outline"><option value="outer">Dark outline (readable in game)</option><option value="inner">Inner shading</option><option value="none">None</option></select></label>
+  </section>
+  <section id="animsec" style="display:none">
+    <h2>7 · Animation</h2>
+    <label class="wide">Clip <select id="clip"></select></label>
+    <label>Frames <input type="range" id="frames" min="1" max="8" value="2"><output></output></label>
+  </section>
+  <section>
+    <div class="btns"><button class="primary" id="save" disabled>Download PNG</button></div>
+    <div class="status" id="saveinfo"></div>
+  </section>
+</aside>
+<div class="stage">
+  <div class="row">
+    <div class="card"><h3>Sprite (actual pixels, enlarged)</h3><canvas id="big" class="px checker" width="320" height="320"></canvas></div>
+    <div class="card"><h3>In the dungeon (3× game scale)</h3><canvas id="game" class="px" width="240" height="180" style="width:480px;height:360px"></canvas>
+      <label style="grid-template-columns:90px 1fr 40px;margin-top:8px">Torchlight <input type="range" id="torch" min="2" max="7" value="7"><output></output></label></div>
+  </div>
+  <div class="row">
+    <div class="card"><h3>Frames</h3><canvas id="sheet" class="px checker" width="16" height="16"></canvas><div class="pal" id="pal"></div></div>
+    <div class="card"><h3>High-res render (what the camera sees)</h3><canvas id="hires" class="checker" width="128" height="128" style="width:256px"></canvas></div>
+  </div>
+  <p class="hint"><b>How to use:</b> load a capture from Scene3D (a splat <b>.ply</b> or a solid <b>.glb/.obj/.ply</b> model). Fix the up axis if the object is sideways, then use <b>Keep radius</b>, <b>Cut floor</b> and <b>Auto-crop</b> to remove the room around it. Pick the preset for what you're making, adjust Turn and Zoom until it reads well at game size, and press <b>Download PNG</b>. Send the PNG to Claude and it becomes part of the game. The file name tells the game which sprite it replaces, so keep it.<br><br>
+  Splats are frozen in place, so they're ideal for items, props, walls and statues. For walking characters, use an animated <b>.glb</b> model; its clips show up under Animation.</p>
+</div>
+</main>
+
+<!--THREE_SOURCES-->
+
+<script>
+(async () => {
+  // ---------- load bundled three.js (offline) as blob modules ----------
+  const srcOf = id => document.getElementById(id).textContent;
+  const blobURL = s => URL.createObjectURL(new Blob([s], { type: 'text/javascript' }));
+  const coreURL = blobURL(srcOf('src-core'));
+  const threeURL = blobURL(srcOf('src-three').replaceAll("'./three.core.js'", `'${coreURL}'`));
+  const fix = s => s.replaceAll("from 'three'", `from '${threeURL}'`);
+  const bguURL = blobURL(fix(srcOf('src-bgu')));
+  const skelURL = blobURL(fix(srcOf('src-skel')));
+  const gltfURL = blobURL(fix(srcOf('src-gltf')).replaceAll("'../utils/BufferGeometryUtils.js'", `'${bguURL}'`).replaceAll("'../utils/SkeletonUtils.js'", `'${skelURL}'`));
+  const plyURL = blobURL(fix(srcOf('src-ply')));
+  const objURL = blobURL(fix(srcOf('src-obj')));
+  const THREE = await import(threeURL);
+  const { GLTFLoader } = await import(gltfURL);
+  const { PLYLoader } = await import(plyURL);
+  const { OBJLoader } = await import(objURL);
+  window.__bakerReady = true;
+
+  const $ = id => document.getElementById(id);
+  const PRESETS = [
+    ['Item icon (16×16)', 'i_sword', 16, 16, 'icon', 'center'],
+    ['Hero frame (16×24)', 'hero', 16, 24, 'iso', 'feet'],
+    ['Monster (24×24)', 'm_brute', 24, 24, 'iso', 'feet'],
+    ['Boss (32×40)', 'boss', 32, 40, 'iso', 'feet'],
+    ['Townsperson (12×18)', 'npc_merchant', 12, 18, 'iso', 'feet'],
+    ['Held weapon (8×16)', 'w_sword', 8, 16, 'iso', 'center'],
+    ['Floor tile (24×12)', 'floor', 24, 12, 'iso', 'center'],
+    ['Wall block (24×30)', 'wall', 24, 30, 'iso', 'center'],
+    ['Prop / chest (16×16)', 'i_chestbox', 16, 16, 'iso', 'feet'],
+    ['Tree (22×18)', 'tree', 22, 18, 'iso', 'feet'],
+    ['Gem / effect (8×8)', 'gem', 8, 8, 'icon', 'center'],
+    ['Custom', 'custom', 32, 32, 'iso', 'center'],
+  ];
+  PRESETS.forEach((p, i) => { const o = document.createElement('option'); o.value = i; o.textContent = p[0]; $('preset').appendChild(o); });
+  $('preset').onchange = () => { const p = PRESETS[+$('preset').value]; $('name').value = p[1]; $('w').value = p[2]; $('h').value = p[3]; $('view').value = p[4]; $('anchor').value = p[5]; schedule(); };
+
+  // sliders show their values
+  document.querySelectorAll('input[type=range]').forEach(r => { const o = r.parentElement.querySelector('output'); const upd = () => { if (o) o.textContent = r.value; }; r.addEventListener('input', () => { upd(); schedule(); }); upd(); });
+  ['w', 'h', 'view', 'up', 'anchor', 'outline', 'clip', 'name', 'floorauto', 'lit'].forEach(id => $(id).addEventListener('change', schedule));
+
+  // ---------- model state ----------
+  let splat = null;      // {n, pos, col, op, cov}
+  let mesh = null;       // THREE.Object3D
+  let clips = [], mixer = null;
+  let center = [0, 0, 0], radius = 1, lastSheet = null;
+  const SH0 = 0.28209479177387814;
+
+  function setStatus(t, ok) { $('status').textContent = t; $('status').className = 'status' + (ok ? ' ok' : ''); }
+
+  async function loadFile(f) {
+    setStatus('Loading ' + f.name + '…');
+    const buf = await f.arrayBuffer(); const ext = f.name.split('.').pop().toLowerCase();
+    splat = null; mesh = null; clips = []; mixer = null;
+    try {
+      if (ext === 'splat') splat = finishSplat(parseDotSplat(buf));
+      else if (ext === 'ply') {
+        const head = new TextDecoder().decode(new Uint8Array(buf, 0, Math.min(buf.byteLength, 8192)));
+        const faces = /element face (\d+)/.exec(head);
+        if (faces && +faces[1] > 0) { const g = new PLYLoader().parse(buf); g.computeVertexNormals(); mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: g.hasAttribute('color'), roughness: .7, metalness: .1, side: THREE.DoubleSide })); }
+        else splat = finishSplat(parsePlySplat(buf, head));
+      } else if (ext === 'glb' || ext === 'gltf') {
+        const g = await new Promise((res, rej) => new GLTFLoader().parse(buf, '', res, rej));
+        mesh = g.scene; clips = g.animations || [];
+      } else if (ext === 'obj') mesh = new OBJLoader().parse(new TextDecoder().decode(buf));
+      else throw new Error('Unsupported file type');
+    } catch (e) { setStatus('Could not read this file: ' + e.message); return; }
+    if (splat) { robustBounds(); setStatus(`Loaded ${splat.n.toLocaleString()} splats.`, true); }
+    if (mesh) {
+      mesh.traverse(o => { if (o.isMesh && o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(m => { m.side = THREE.DoubleSide; }); } });
+      const box = new THREE.Box3().setFromObject(mesh), c = box.getCenter(new THREE.Vector3());
+      center = [c.x, c.y, c.z]; radius = Math.max(1e-6, box.getSize(new THREE.Vector3()).length() / 2);
+      if (clips.length) mixer = new THREE.AnimationMixer(mesh);
+      setStatus(`Loaded model${clips.length ? ' with ' + clips.length + ' animation(s)' : ''}.`, true);
+    }
+    $('clip').innerHTML = '<option value="-1">No animation (still)</option>' + clips.map((c, i) => `<option value="${i}">${c.name || 'Clip ' + (i + 1)}</option>`).join('');
+    $('animsec').style.display = clips.length ? '' : 'none';
+    if (clips.length) $('clip').value = '0';
+    schedule();
+  }
+  $('file').onchange = e => e.target.files[0] && loadFile(e.target.files[0]);
+  const drop = $('drop');
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.style.borderColor = 'var(--amber)'; });
+  drop.addEventListener('dragleave', () => drop.style.borderColor = '');
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.style.borderColor = ''; if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+
+  // ---------- splat parsing ----------
+  function covFrom(sx, sy, sz, qw, qx, qy, qz, out, o) {
+    const n = Math.hypot(qw, qx, qy, qz) || 1; qw /= n; qx /= n; qy /= n; qz /= n;
+    const r00 = 1 - 2 * (qy * qy + qz * qz), r01 = 2 * (qx * qy - qw * qz), r02 = 2 * (qx * qz + qw * qy);
+    const r10 = 2 * (qx * qy + qw * qz), r11 = 1 - 2 * (qx * qx + qz * qz), r12 = 2 * (qy * qz - qw * qx);
+    const r20 = 2 * (qx * qz - qw * qy), r21 = 2 * (qy * qz + qw * qx), r22 = 1 - 2 * (qx * qx + qy * qy);
+    const a0 = r00 * sx, a1 = r01 * sy, a2 = r02 * sz, b0 = r10 * sx, b1 = r11 * sy, b2 = r12 * sz, c0 = r20 * sx, c1 = r21 * sy, c2 = r22 * sz;
+    out[o] = a0 * a0 + a1 * a1 + a2 * a2; out[o + 1] = a0 * b0 + a1 * b1 + a2 * b2; out[o + 2] = a0 * c0 + a1 * c1 + a2 * c2;
+    out[o + 3] = b0 * b0 + b1 * b1 + b2 * b2; out[o + 4] = b0 * c0 + b1 * c1 + b2 * c2; out[o + 5] = c0 * c0 + c1 * c1 + c2 * c2;
+  }
+  function alloc(n) { return { n, pos: new Float32Array(n * 3), col: new Float32Array(n * 3), op: new Float32Array(n), cov: new Float32Array(n * 6), ms: new Float32Array(n) }; }
+  function finishSplat(s) { for (let i = 0; i < s.n; i++) { const o = i * 6; s.ms[i] = Math.sqrt(Math.max(s.cov[o], s.cov[o + 3], s.cov[o + 5])); } const t = []; const st = Math.max(1, Math.floor(s.n / 20000)); for (let i = 0; i < s.n; i += st) t.push(s.ms[i]); t.sort((a, b) => a - b); s.medScale = t[t.length >> 1] || 0.01; return s; }
+  function parsePlySplat(buf, head) {
+    const end = head.indexOf('end_header') + 'end_header'.length + 1;
+    const lines = head.slice(0, end).split('\n');
+    if (!/binary_little_endian/.test(head)) throw new Error('only binary little-endian PLY is supported');
+    let n = 0, props = [], inVertex = false;
+    const SZ = { float: 4, float32: 4, double: 8, float64: 8, uchar: 1, uint8: 1, char: 1, int8: 1, ushort: 2, uint16: 2, short: 2, int16: 2, uint: 4, uint32: 4, int: 4, int32: 4 };
+    for (const l of lines) {
+      const t = l.trim().split(/\s+/);
+      if (t[0] === 'element') { inVertex = t[1] === 'vertex'; if (inVertex) n = +t[2]; }
+      else if (t[0] === 'property' && inVertex) props.push({ type: t[1], name: t[2] });
+    }
+    let off = 0; const P = {}; for (const p of props) { P[p.name] = { off, type: p.type }; off += SZ[p.type]; }
+    const stride = off, dv = new DataView(buf, end);
+    const rd = (base, p) => { const q = P[p]; if (!q) return undefined; const o = base + q.off; switch (q.type) { case 'float': case 'float32': return dv.getFloat32(o, true); case 'double': case 'float64': return dv.getFloat64(o, true); case 'uchar': case 'uint8': return dv.getUint8(o); case 'char': case 'int8': return dv.getInt8(o); case 'ushort': case 'uint16': return dv.getUint16(o, true); case 'short': case 'int16': return dv.getInt16(o, true); case 'uint': case 'uint32': return dv.getUint32(o, true); default: return dv.getInt32(o, true); } };
+    const isGS = !!P.f_dc_0, s = alloc(n);
+    for (let i = 0; i < n; i++) {
+      const b = i * stride;
+      s.pos[i * 3] = rd(b, 'x'); s.pos[i * 3 + 1] = rd(b, 'y'); s.pos[i * 3 + 2] = rd(b, 'z');
+      if (isGS) {
+        for (let k = 0; k < 3; k++) s.col[i * 3 + k] = Math.min(1, Math.max(0, 0.5 + SH0 * rd(b, 'f_dc_' + k)));
+        const o = P.opacity ? rd(b, 'opacity') : 5; s.op[i] = 1 / (1 + Math.exp(-o));
+        const sx = P.scale_0 ? Math.exp(rd(b, 'scale_0')) : .01, sy = P.scale_1 ? Math.exp(rd(b, 'scale_1')) : sx, sz = P.scale_2 ? Math.exp(rd(b, 'scale_2')) : sx;
+        covFrom(sx, sy, sz, rd(b, 'rot_0') ?? 1, rd(b, 'rot_1') ?? 0, rd(b, 'rot_2') ?? 0, rd(b, 'rot_3') ?? 0, s.cov, i * 6);
+      } else {   // plain colored point cloud
+        const r = rd(b, 'red'), g = rd(b, 'green'), bl = rd(b, 'blue');
+        s.col[i * 3] = (r ?? 200) / 255; s.col[i * 3 + 1] = (g ?? 200) / 255; s.col[i * 3 + 2] = (bl ?? 200) / 255; s.op[i] = 0.9; s.pointCloud = true;
+      }
+    }
+    if (!isGS) {   // pick a point size from typical spacing
+      robustBounds(s); const sz = radius * 0.012;
+      for (let i = 0; i < n; i++) covFrom(sz, sz, sz, 1, 0, 0, 0, s.cov, i * 6);
+    }
+    return s;
+  }
+  function parseDotSplat(buf) {
+    const n = Math.floor(buf.byteLength / 32), s = alloc(n), f = new Float32Array(buf, 0, n * 8), u = new Uint8Array(buf);
+    for (let i = 0; i < n; i++) {
+      s.pos[i * 3] = f[i * 8]; s.pos[i * 3 + 1] = f[i * 8 + 1]; s.pos[i * 3 + 2] = f[i * 8 + 2];
+      const b = i * 32 + 24;
+      s.col[i * 3] = u[b] / 255; s.col[i * 3 + 1] = u[b + 1] / 255; s.col[i * 3 + 2] = u[b + 2] / 255; s.op[i] = u[b + 3] / 255;
+      covFrom(f[i * 8 + 3], f[i * 8 + 4], f[i * 8 + 5], (u[b + 4] - 128) / 128, (u[b + 5] - 128) / 128, (u[b + 6] - 128) / 128, (u[b + 7] - 128) / 128, s.cov, i * 6);
+    }
+    return s;
+  }
+  function robustBounds(s = splat) {   // median center + 80th percentile radius, ignores stray splats
+    const n = s.n, step = Math.max(1, Math.floor(n / 20000)), xs = [], ys = [], zs = [];
+    for (let i = 0; i < n; i += step) { if (s.op[i] < 0.1) continue; xs.push(s.pos[i * 3]); ys.push(s.pos[i * 3 + 1]); zs.push(s.pos[i * 3 + 2]); }
+    const med = a => { const b = Float32Array.from(a).sort(); return b[b.length >> 1] || 0; };
+    center = [med(xs), med(ys), med(zs)];
+    const d = xs.map((x, i) => Math.hypot(x - center[0], ys[i] - center[1], zs[i] - center[2])).sort((a, b) => a - b);
+    radius = Math.max(1e-6, d[Math.floor(d.length * 0.8)] || 1);
+  }
+
+  // ---------- transforms ----------
+  const D = Math.PI / 180;
+  const mul = (a, b) => [0, 1, 2].map(r => [0, 1, 2].map(c => a[r][0] * b[0][c] + a[r][1] * b[1][c] + a[r][2] * b[2][c]));
+  const rx = t => [[1, 0, 0], [0, Math.cos(t), -Math.sin(t)], [0, Math.sin(t), Math.cos(t)]];
+  const ry = t => [[Math.cos(t), 0, Math.sin(t)], [0, 1, 0], [-Math.sin(t), 0, Math.cos(t)]];
+  const rz = t => [[Math.cos(t), -Math.sin(t), 0], [Math.sin(t), Math.cos(t), 0], [0, 0, 1]];
+  function upFix() { switch ($('up').value) { case '-y': return rx(Math.PI); case 'z': return rx(-Math.PI / 2); case '-z': return rx(Math.PI / 2); default: return rx(0); } }
+  function modelMat() { return mul(rx(+$('pitch').value * D), mul(rz(+$('roll').value * D), mul(ry(+$('yaw').value * D), upFix()))); }
+  function viewAngles() { switch ($('view').value) { case 'icon': return [35, 22]; case 'front': return [0, 5]; case 'top': return [45, 80]; case 'd4': return [0, Math.asin(28 / 36) / D]; default: return [45, 30]; } }
+  function viewMat() {   // rows: right, up, toward-camera
+    const [az, el] = viewAngles().map(v => v * D);
+    const d = [Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az)];
+    let r = [d[2], 0, -d[0]]; const rl = Math.hypot(...r) || 1; r = r.map(v => v / rl);
+    const u = [d[1] * r[2] - d[2] * r[1], d[2] * r[0] - d[0] * r[2], d[0] * r[1] - d[1] * r[0]];
+    return [r, u, d];
+  }
+
+  // ---------- splat rasterizer (CPU, EWA splatting, front-to-back) ----------
+  // which splats survive the clean-up controls (sphere crop, opacity, blob size, floor plane, bottom cut)
+  function keepMask(s, M, useFloor = true) {
+    const n = s.n, keepR = radius * (+$('crop').value / 100) * 1.6, minOp = +$('minop').value / 100;
+    const maxS = +$('maxblob').value >= 40 ? Infinity : s.medScale * +$('maxblob').value;
+    const vis = new Uint8Array(n), hy = new Float32Array(n);
+    let ylo = Infinity, yhi = -Infinity;
+    for (let i = 0; i < n; i++) {
+      const x = s.pos[i * 3] - center[0], y = s.pos[i * 3 + 1] - center[1], z = s.pos[i * 3 + 2] - center[2];
+      if (s.op[i] < minOp || s.ms[i] > maxS || x * x + y * y + z * z > keepR * keepR) continue;
+      vis[i] = 1; const my = hy[i] = M[1][0] * x + M[1][1] * y + M[1][2] * z; if (my < ylo) ylo = my; if (my > yhi) yhi = my;
+    }
+    if (!useFloor) return vis;
+    if ($('floorauto').value === '1') {
+      const fy = floorHeight(s, M);
+      if (fy !== null) {
+        for (let i = 0; i < n; i++) if (vis[i] && hy[i] < fy) vis[i] = 0;
+        ylo = Infinity; yhi = -Infinity; for (let i = 0; i < n; i++) if (vis[i]) { if (hy[i] < ylo) ylo = hy[i]; if (hy[i] > yhi) yhi = hy[i]; }
+      }
+    }
+    const cut = +$('floor').value / 100;
+    if (cut > 0) { const yc = ylo + (yhi - ylo) * cut; for (let i = 0; i < n; i++) if (vis[i] && hy[i] < yc) vis[i] = 0; }
+    return vis;
+  }
+  // floor plane: the densest thin height slice that is also wide (spans most of the scene horizontally).
+  // Detected once per orientation and kept in absolute model-space height.
+  let floorCache = { key: '', y: null };
+  function floorHeight(s, M) {
+    const key = $('up').value + '|' + center.join(',');
+    if (floorCache.key === key) return floorCache.y;
+    const st = Math.max(1, Math.floor(s.n / 60000)), H = [], X = [], Z = [];
+    for (let i = 0; i < s.n; i += st) {
+      if (s.op[i] < 0.1) continue;
+      const x = s.pos[i * 3] - center[0], y = s.pos[i * 3 + 1] - center[1], z = s.pos[i * 3 + 2] - center[2];
+      H.push(M[1][0] * x + M[1][1] * y + M[1][2] * z); X.push(M[0][0] * x + M[0][1] * y + M[0][2] * z); Z.push(M[2][0] * x + M[2][1] * y + M[2][2] * z);
+    }
+    let y = null;
+    if (H.length > 100) {
+      const lo = pct(H, 0.02), hi = pct(H, 0.98), NB = 128, w = Math.max(1e-6, (hi - lo) / NB), bins = Array.from({ length: NB }, () => []);
+      H.forEach((h, i) => { if (h >= lo && h < hi) bins[Math.min(NB - 1, ((h - lo) / w) | 0)].push(i); });
+      const spread = idx => idx.length < 20 ? 0 : Math.max(pct(idx.map(i => X[i]), .9) - pct(idx.map(i => X[i]), .1), pct(idx.map(i => Z[i]), .9) - pct(idx.map(i => Z[i]), .1));
+      const all = spread(H.map((_, i) => i));
+      const order = bins.map((b, i) => i).sort((a, b) => bins[b].length - bins[a].length);
+      for (const bi of order.slice(0, 6)) {
+        if (bins[bi].length < H.length * 0.04) break;
+        if (spread(bins[bi]) >= all * 0.6) {   // wide & dense: a floor
+          let top = bi; while (top + 1 < NB && bins[top + 1].length > bins[bi].length * 0.12) top++;
+          y = lo + (top + 1.5) * w; break;
+        }
+      }
+    }
+    floorCache = { key, y };
+    return y;
+  }
+  function pct(arr, q) { const b = Float32Array.from(arr).sort(); return b[Math.min(b.length - 1, Math.max(0, Math.floor(b.length * q)))]; }
+  function renderSplats(W, H, frame) {
+    const s = splat, A = mul(viewMat(), modelMat()), M = modelMat();
+    const sz = (+$('ssize').value / 100) ** 2, n = s.n;
+    const vis = keepMask(s, upFix());
+    const sx = new Float32Array(n), sy = new Float32Array(n), dep = new Float32Array(n);
+    const us = [], vs = []; let cnt = 0;
+    for (let i = 0; i < n; i++) {
+      if (!vis[i]) continue;
+      const x = s.pos[i * 3] - center[0], y = s.pos[i * 3 + 1] - center[1], z = s.pos[i * 3 + 2] - center[2];
+      const u = A[0][0] * x + A[0][1] * y + A[0][2] * z, v = A[1][0] * x + A[1][1] * y + A[1][2] * z;
+      sx[i] = u; sy[i] = v; dep[i] = A[2][0] * x + A[2][1] * y + A[2][2] * z; cnt++;
+      if ((cnt & 3) === 0 || n < 40000) { us.push(u); vs.push(v); }
+    }
+    if (!cnt) return null;
+    const fit = fitScale(pct(us, 0.002), pct(us, 0.998), pct(vs, 0.002), pct(vs, 0.998), W, H);
+    const col = new Float32Array(W * H * 3), T = new Float32Array(W * H).fill(1);
+    // depth sort (front to back = descending dep) via 16-bit bucket counting sort
+    let dmin = Infinity, dmax = -Infinity; for (let i = 0; i < n; i++) if (vis[i]) { if (dep[i] < dmin) dmin = dep[i]; if (dep[i] > dmax) dmax = dep[i]; }
+    const B = 65536, key = new Uint16Array(n), counts = new Uint32Array(B + 1), span = (dmax - dmin) || 1;
+    for (let i = 0; i < n; i++) if (vis[i]) { key[i] = Math.min(B - 1, ((dmax - dep[i]) / span * (B - 1)) | 0); counts[key[i] + 1]++; }
+    for (let k = 0; k < B; k++) counts[k + 1] += counts[k];
+    const order = new Uint32Array(cnt); for (let i = 0; i < n; i++) if (vis[i]) order[counts[key[i]]++] = i;
+    const br = +$('bright').value / 100, ss = fit.s;
+    for (let oi = 0; oi < cnt; oi++) {
+      const i = order[oi], c = s.cov, o = i * 6;
+      // 2D covariance = A Σ Aᵀ (top-left 2x2), in pixels
+      const S = [[c[o], c[o + 1], c[o + 2]], [c[o + 1], c[o + 3], c[o + 4]], [c[o + 2], c[o + 4], c[o + 5]]];
+      const r0 = A[0], r1 = A[1];
+      const t0 = [S[0][0] * r0[0] + S[0][1] * r0[1] + S[0][2] * r0[2], S[1][0] * r0[0] + S[1][1] * r0[1] + S[1][2] * r0[2], S[2][0] * r0[0] + S[2][1] * r0[1] + S[2][2] * r0[2]];
+      const t1 = [S[0][0] * r1[0] + S[0][1] * r1[1] + S[0][2] * r1[2], S[1][0] * r1[0] + S[1][1] * r1[1] + S[1][2] * r1[2], S[2][0] * r1[0] + S[2][1] * r1[1] + S[2][2] * r1[2]];
+      const k2 = ss * ss * sz;
+      const a = (r0[0] * t0[0] + r0[1] * t0[1] + r0[2] * t0[2]) * k2 + 0.3, b = (r1[0] * t0[0] + r1[1] * t0[1] + r1[2] * t0[2]) * k2, d = (r1[0] * t1[0] + r1[1] * t1[1] + r1[2] * t1[2]) * k2 + 0.3;
+      const det = a * d - b * b; if (det <= 0) continue;
+      const ca = d / det, cb = -b / det, cc = a / det;
+      const mid = (a + d) / 2, lam = mid + Math.sqrt(Math.max(0.1, mid * mid - det)), rad = Math.min(48, Math.ceil(3 * Math.sqrt(lam)));
+      const px = fit.cx + sx[i] * ss, py = fit.cy - sy[i] * ss;
+      const x0 = Math.max(0, Math.floor(px - rad)), x1 = Math.min(W - 1, Math.ceil(px + rad)), y0 = Math.max(0, Math.floor(py - rad)), y1 = Math.min(H - 1, Math.ceil(py + rad));
+      if (x0 > x1 || y0 > y1) continue;
+      const op = s.op[i], cr = s.col[i * 3] * br, cg = s.col[i * 3 + 1] * br, cbl = s.col[i * 3 + 2] * br;
+      for (let yy = y0; yy <= y1; yy++) {
+        const dy = yy + 0.5 - py;
+        for (let xx = x0; xx <= x1; xx++) {
+          const p = yy * W + xx, t = T[p]; if (t < 0.003) continue;
+          const dx = xx + 0.5 - px, pw = -0.5 * (ca * dx * dx + 2 * cb * dx * dy + cc * dy * dy);
+          if (pw > 0) continue;
+          const al = Math.min(0.99, op * Math.exp(pw)); if (al < 1 / 255) continue;
+          const w = t * al; col[p * 3] += w * cr; col[p * 3 + 1] += w * cg; col[p * 3 + 2] += w * cbl; T[p] = t * (1 - al);
+        }
+      }
+    }
+    const out = new Float32Array(W * H * 4);   // premultiplied RGBA
+    for (let p = 0; p < W * H; p++) { out[p * 4] = col[p * 3]; out[p * 4 + 1] = col[p * 3 + 1]; out[p * 4 + 2] = col[p * 3 + 2]; out[p * 4 + 3] = 1 - T[p]; }
+    return out;
+  }
+  let fitLock = null;   // keeps scale/position identical across animation frames
+  function fitScale(minx, maxx, miny, maxy, W, H) {
+    if (fitLock) return fitLock;
+    if ($('anchor').value === 'fixed') {   // same scale and foot position for every frame of every clip
+      const SSx = W / +$('w').value;
+      return fitLock = { s: +$('fs').value * SSx, cx: (+$('fox').value + 0.5) * SSx, cy: (+$('foy').value + 1) * SSx };
+    }
+    if ($('anchor').value === 'tile') {   // 1 world unit = exactly one game tile (24 px wide diamond)
+      // tile origin (center of the 1x1 footprint at height 0) lands at the center of the bottom diamond
+      if ($('view').value === 'd4') return fitLock = { s: W, cx: W / 2, cy: H - W * (28 / 36) / 2 };   // floor rect is W x ~0.78W
+      return fitLock = { s: W / Math.SQRT2, cx: W / 2, cy: H - W / 4 };
+    }
+    const zoom = +$('zoom').value / 100, w = Math.max(1e-6, maxx - minx), h = Math.max(1e-6, maxy - miny);
+    const s = Math.min(W * 0.86 / w, H * 0.86 / h) * zoom;
+    const cxw = (minx + maxx) / 2, cyw = (miny + maxy) / 2;
+    let cx = W / 2 - cxw * s, cy = H / 2 + cyw * s;
+    if ($('anchor').value === 'feet') cy = H * 0.97 + miny * s;
+    cx += +$('offx').value / 100 * W; cy -= +$('offy').value / 100 * H;
+    return fitLock = { s, cx, cy };
+  }
+
+  // ---------- mesh renderer (three.js, orthographic) ----------
+  let renderer = null;
+  function renderMesh(W, H, frame, nframes) {
+    if (!renderer) { renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, preserveDrawingBuffer: true }); renderer.setPixelRatio(1); }
+    renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const scene = new THREE.Scene(), holder = new THREE.Group(), inner = new THREE.Group();
+    const M = modelMat();
+    holder.matrixAutoUpdate = false;
+    holder.matrix.set(M[0][0], M[0][1], M[0][2], 0, M[1][0], M[1][1], M[1][2], 0, M[2][0], M[2][1], M[2][2], 0, 0, 0, 0, 1);
+    if ($('anchor').value === 'tile' || $('anchor').value === 'fixed') inner.position.set(0, 0, 0); else inner.position.set(-center[0], -center[1], -center[2]);
+    const ci = +$('clip').value;
+    if (mixer && ci >= 0) {
+      mixer.stopAllAction(); const clip = clips[ci], act = mixer.clipAction(clip); act.reset().play();
+      mixer.setTime(clip.duration * frame / Math.max(1, nframes));
+    }
+    inner.add(mesh); holder.add(inner); scene.add(holder);
+    const swapped = [];
+    if ($('lit').value === 'unlit') mesh.traverse(o => {
+      if (!o.isMesh) return;
+      const conv = m => { const b = new THREE.MeshBasicMaterial({ map: m.map || null, color: m.color ? m.color.clone() : 0xffffff, vertexColors: !!m.vertexColors || !!(o.geometry && o.geometry.hasAttribute('color')), side: THREE.DoubleSide, transparent: m.transparent, alphaTest: m.alphaTest || 0 }); b.color.multiplyScalar(+$('bright').value / 100); return b; };
+      swapped.push([o, o.material]); o.material = Array.isArray(o.material) ? o.material.map(conv) : conv(o.material);
+    });
+    const la = +$('light').value * D, br = +$('bright').value / 100;
+    scene.add(new THREE.HemisphereLight(0xfff2dd, 0x302a3a, 1.4 * br));
+    const dl = new THREE.DirectionalLight(0xfff0d8, 2.4 * br); dl.position.set(Math.sin(la) * 3, 4, Math.cos(la) * 3); scene.add(dl);
+    scene.updateMatrixWorld(true);
+    // fit: project bounding box corners (and floor cut / crop via clipping planes is approximated by framing)
+    const V = viewMat(), box = new THREE.Box3().setFromObject(holder);
+    // tight framing: project (a sample of) the actual vertices
+    let minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity; const tv = new THREE.Vector3();
+    holder.traverse(o => {
+      if (!o.isMesh || !o.geometry.attributes.position) return;
+      const pa = o.geometry.attributes.position, st = Math.max(1, Math.floor(pa.count / 20000));
+      for (let i = 0; i < pa.count; i += st) {
+        tv.fromBufferAttribute(pa, i).applyMatrix4(o.matrixWorld);
+        const u = V[0][0] * tv.x + V[0][1] * tv.y + V[0][2] * tv.z, v = V[1][0] * tv.x + V[1][1] * tv.y + V[1][2] * tv.z;
+        if (u < minx) minx = u; if (u > maxx) maxx = u; if (v < miny) miny = v; if (v > maxy) maxy = v;
+      }
+    });
+    if (minx === Infinity) { minx = -radius; maxx = radius; miny = -radius; maxy = radius; }
+    const f = fitScale(minx, maxx, miny, maxy, W, H);
+    const cam = new THREE.OrthographicCamera(-f.cx / f.s, (W - f.cx) / f.s, f.cy / f.s, -(H - f.cy) / f.s, -100 * radius, 100 * radius);
+    const d = V[2]; cam.position.set(d[0] * radius * 10, d[1] * radius * 10, d[2] * radius * 10); cam.up.set(V[1][0], V[1][1], V[1][2]); cam.lookAt(0, 0, 0);
+    if ($('floor').value > 0) {   // floor cut as a clipping plane in model space
+      const cut = box.min.y + (box.max.y - box.min.y) * (+$('floor').value / 100);
+      renderer.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, 1, 0), -cut)];
+    } else renderer.clippingPlanes = [];
+    renderer.render(scene, cam);
+    swapped.forEach(([o, m]) => { o.material = m; });
+    inner.remove(mesh);
+    const c2 = document.createElement('canvas'); c2.width = W; c2.height = H; const g = c2.getContext('2d');
+    g.drawImage(renderer.domElement, 0, 0); const id = g.getImageData(0, 0, W, H).data;
+    const out = new Float32Array(W * H * 4);
+    for (let p = 0; p < W * H; p++) { const a = id[p * 4 + 3] / 255; out[p * 4] = id[p * 4] / 255 * a; out[p * 4 + 1] = id[p * 4 + 1] / 255 * a; out[p * 4 + 2] = id[p * 4 + 2] / 255 * a; out[p * 4 + 3] = a; }
+    return out;
+  }
+
+  // ---------- pixel post-processing ----------
+  function toPixels(hi, W, H, SS) {
+    const w = W, h = H, HW = W * SS, px = new Uint8ClampedArray(w * h * 4);
+    const con = +$('contrast').value / 100, sat = +$('sat').value / 100, cut = +$('cutoff').value / 100;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      let r = 0, g = 0, b = 0, a = 0;
+      for (let j = 0; j < SS; j++) for (let i = 0; i < SS; i++) { const p = ((y * SS + j) * HW + x * SS + i) * 4; r += hi[p]; g += hi[p + 1]; b += hi[p + 2]; a += hi[p + 3]; }
+      const n = SS * SS; a /= n; if (a < cut) continue;
+      r /= n * a; g /= n * a; b /= n * a;
+      const l = 0.3 * r + 0.59 * g + 0.11 * b;
+      r = l + (r - l) * sat; g = l + (g - l) * sat; b = l + (b - l) * sat;
+      r = (r - 0.5) * con + 0.5; g = (g - 0.5) * con + 0.5; b = (b - 0.5) * con + 0.5;
+      const o = (y * w + x) * 4; px[o] = r * 255; px[o + 1] = g * 255; px[o + 2] = b * 255; px[o + 3] = 255;
+    }
+    return px;
+  }
+  function quantize(frames, k) {   // shared k-means palette across all frames
+    const pts = []; frames.forEach(f => { for (let i = 0; i < f.length; i += 4) if (f[i + 3]) pts.push([f[i], f[i + 1], f[i + 2]]); });
+    if (!pts.length) return [];
+    k = Math.min(k, pts.length);
+    const cent = [pts[Math.floor(pts.length / 2)].slice()];
+    while (cent.length < k) {   // farthest-point init (deterministic)
+      let best = null, bd = -1;
+      for (const p of pts) { let m = Infinity; for (const c of cent) { const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2; if (d < m) m = d; } if (m > bd) { bd = m; best = p; } }
+      cent.push(best.slice());
+    }
+    const asg = new Int32Array(pts.length);
+    for (let it = 0; it < 10; it++) {
+      for (let i = 0; i < pts.length; i++) { let m = Infinity, bi = 0; for (let c = 0; c < cent.length; c++) { const d = (pts[i][0] - cent[c][0]) ** 2 + (pts[i][1] - cent[c][1]) ** 2 + (pts[i][2] - cent[c][2]) ** 2; if (d < m) { m = d; bi = c; } } asg[i] = bi; }
+      const sum = cent.map(() => [0, 0, 0, 0]);
+      for (let i = 0; i < pts.length; i++) { const s = sum[asg[i]]; s[0] += pts[i][0]; s[1] += pts[i][1]; s[2] += pts[i][2]; s[3]++; }
+      sum.forEach((s, c) => { if (s[3]) cent[c] = [s[0] / s[3], s[1] / s[3], s[2] / s[3]]; });
+    }
+    const pal = cent.map(c => c.map(v => Math.round(Math.min(255, Math.max(0, v)))));
+    frames.forEach(f => { for (let i = 0; i < f.length; i += 4) if (f[i + 3]) { let m = Infinity, bi = 0; for (let c = 0; c < pal.length; c++) { const d = (f[i] - pal[c][0]) ** 2 + (f[i + 1] - pal[c][1]) ** 2 + (f[i + 2] - pal[c][2]) ** 2; if (d < m) { m = d; bi = c; } } f[i] = pal[bi][0]; f[i + 1] = pal[bi][1]; f[i + 2] = pal[bi][2]; } });
+    return pal;
+  }
+  function outline(f, w, h, mode, pal) {
+    if (mode === 'none') return;
+    const dark = pal.length ? pal.reduce((a, c) => (c[0] + c[1] + c[2] < a[0] + a[1] + a[2] ? c : a), pal[0]) : [40, 30, 34];   // full color: a soft warm-dark outline
+    const oc = mode === 'outer' ? [Math.round(16 + dark[0] * .15), Math.round(13 + dark[1] * .15), Math.round(20 + dark[2] * .15)] : null;
+    const src = f.slice(), op = (x, y) => x >= 0 && y >= 0 && x < w && y < h && src[(y * w + x) * 4 + 3];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const o = (y * w + x) * 4, edge = !op(x - 1, y) || !op(x + 1, y) || !op(x, y - 1) || !op(x, y + 1);
+      if (mode === 'outer' && !src[o + 3] && (op(x - 1, y) || op(x + 1, y) || op(x, y - 1) || op(x, y + 1))) { f[o] = oc[0]; f[o + 1] = oc[1]; f[o + 2] = oc[2]; f[o + 3] = 255; }
+      if (mode === 'inner' && src[o + 3] && edge) { f[o] = src[o] * .55; f[o + 1] = src[o + 1] * .55; f[o + 2] = src[o + 2] * .55; }
+    }
+  }
+
+  // ---------- bake ----------
+  let timer = 0;
+  function schedule() { clearTimeout(timer); timer = setTimeout(bake, splat && splat.n > 400000 ? 250 : 60); }
+  function bake() {
+    if (!splat && !mesh) return;
+    const W = Math.max(4, Math.min(192, +$('w').value | 0)), H = Math.max(4, Math.min(192, +$('h').value | 0));
+    const SS = splat && splat.n > 1500000 ? 4 : 6;
+    const nframes = mesh && mixer && +$('clip').value >= 0 ? +$('frames').value : 1;
+    const frames = []; let firstHi = null; fitLock = null;
+    for (let fi = 0; fi < nframes; fi++) {
+      const hi = splat ? renderSplats(W * SS, H * SS, fi) : renderMesh(W * SS, H * SS, fi, nframes);
+      if (!hi) { setStatus('Nothing left to draw: loosen Keep radius / Cut floor / Min opacity.'); return; }
+      if (!firstHi) firstHi = hi;
+      frames.push(toPixels(hi, W, H, SS));
+    }
+    const pal = +$('colors').value > 0 ? quantize(frames, +$('colors').value) : [];   // 0 = full color (no palette)
+    frames.forEach(f => outline(f, W, H, $('outline').value, pal));
+    // sheet
+    const sheet = document.createElement('canvas'); sheet.width = W * nframes; sheet.height = H;
+    const sg = sheet.getContext('2d');
+    frames.forEach((f, i) => sg.putImageData(new ImageData(f, W, H), i * W, 0));
+    lastSheet = { canvas: sheet, W, H, n: nframes };
+    // previews
+    const sc = $('sheet'); sc.width = sheet.width; sc.height = H; sc.getContext('2d').drawImage(sheet, 0, 0);
+    sc.style.width = Math.min(560, sheet.width * 8) + 'px';
+    const big = $('big'), bs = Math.floor(Math.min(320 / W, 320 / H)); big.width = W * bs; big.height = H * bs;
+    const bg = big.getContext('2d'); bg.imageSmoothingEnabled = false; bg.clearRect(0, 0, big.width, big.height); bg.drawImage(sheet, 0, 0, W, H, 0, 0, W * bs, H * bs);
+    const hr = $('hires'); hr.width = W * SS; hr.height = H * SS; const hd = new ImageData(W * SS, H * SS);
+    for (let p = 0; p < W * SS * H * SS; p++) { const a = firstHi[p * 4 + 3] || 1e-6; hd.data[p * 4] = firstHi[p * 4] / a * 255; hd.data[p * 4 + 1] = firstHi[p * 4 + 1] / a * 255; hd.data[p * 4 + 2] = firstHi[p * 4 + 2] / a * 255; hd.data[p * 4 + 3] = firstHi[p * 4 + 3] * 255; }
+    hr.getContext('2d').putImageData(hd, 0, 0); hr.style.width = Math.min(360, W * SS * 2) + 'px';
+    $('pal').innerHTML = pal.map(c => `<i style="background:rgb(${c})"></i>`).join('');
+    drawGame(); $('save').disabled = false;
+    $('saveinfo').textContent = `${fileName()} · ${nframes} frame${nframes > 1 ? 's' : ''} · ${pal.length} colors`;
+    window.__bakeCount = (window.__bakeCount || 0) + 1;
+  }
+  function fileName() { const n = ($('name').value || 'sprite').replace(/[^a-z0-9_]/gi, '_').toLowerCase(); return `${n}__${lastSheet.W}x${lastSheet.H}.png`; }
+
+  // in-game mock: dungeon floor diamonds, torch shading like the game
+  function drawGame() {
+    const c = $('game'), g = c.getContext('2d'); g.imageSmoothingEnabled = false;
+    g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height);
+    const L = +$('torch').value / 7;
+    for (let ty = -4; ty <= 4; ty++) for (let tx = -4; tx <= 4; tx++) {
+      const sx = 120 + (tx - ty) * 12, sy = 90 + (tx + ty) * 6;
+      const d = Math.hypot(tx, ty), l = Math.max(0.15, L * (1 - d / 6));
+      g.fillStyle = `rgb(${66 * l},${60 * l},${70 * l})`;
+      g.beginPath(); g.moveTo(sx, sy); g.lineTo(sx + 12, sy + 6); g.lineTo(sx, sy + 12); g.lineTo(sx - 12, sy + 6); g.closePath(); g.fill();
+      g.strokeStyle = `rgb(${40 * l},${36 * l},${44 * l})`; g.stroke();
+    }
+    if (!lastSheet) return;
+    const { canvas, W, H } = lastSheet, t = document.createElement('canvas'); t.width = W; t.height = H;
+    const tg = t.getContext('2d'); tg.drawImage(canvas, 0, 0, W, H, 0, 0, W, H);
+    if (L < 1) { const id = tg.getImageData(0, 0, W, H); for (let i = 0; i < id.data.length; i += 4) { id.data[i] *= L; id.data[i + 1] *= L * (0.85 + .15 * L); id.data[i + 2] *= L * (0.7 + .3 * L); } tg.putImageData(id, 0, 0); }
+    g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(120 - W / 2, 96, W, 2);
+    g.drawImage(t, Math.round(120 - W / 2), Math.round(97 - H));
+  }
+  $('torch').addEventListener('input', drawGame);
+
+  $('autocrop').onclick = () => {
+    if (!splat) return;
+    $('floorauto').value = '1'; $('maxblob').value = 3; $('maxblob').dispatchEvent(new Event('input'));
+    $('crop').value = 100;
+    robustBounds(); const M = upFix();
+    const fy = floorHeight(splat, M), fyAbs = fy === null ? null : fy;   // relative to current center
+    const c0 = center.slice();
+    for (let pass = 0; pass < 3; pass++) {   // recentre on the surviving object and tighten
+      const vis = keepMask(splat, M), xs = [], ys = [], zs = [], st = Math.max(1, Math.floor(splat.n / 30000));
+      for (let i = 0; i < splat.n; i += st) if (vis[i]) { xs.push(splat.pos[i * 3]); ys.push(splat.pos[i * 3 + 1]); zs.push(splat.pos[i * 3 + 2]); }
+      if (xs.length < 50) break;
+      center = [pct(xs, .5), pct(ys, .5), pct(zs, .5)];
+      const d = xs.map((x, i) => Math.hypot(x - center[0], ys[i] - center[1], zs[i] - center[2]));
+      radius = Math.max(1e-6, pct(d, .75) / 1.1);
+      // keep the same absolute floor height after moving the center
+      if (fyAbs !== null) { const dc = [center[0] - c0[0], center[1] - c0[1], center[2] - c0[2]]; floorCache = { key: $('up').value + '|' + center.join(','), y: fyAbs - (M[1][0] * dc[0] + M[1][1] * dc[1] + M[1][2] * dc[2]) }; }
+    }
+    $('crop').value = 100; $('crop').dispatchEvent(new Event('input'));
+  };
+  $('save').onclick = () => {
+    if (!lastSheet) return;
+    lastSheet.canvas.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = fileName(); document.body.appendChild(a); a.click(); a.remove(); });
+  };
+  window.__baker = {
+    async applyRecipe(r) {
+      const set = (id, v) => { if (v === undefined) return; const e = $(id); e.value = v; const o = e.parentElement.querySelector('output'); if (o) o.textContent = v; };
+      const defaults = { view: 'd4', up: 'y', yaw: 0, pitch: 0, roll: 0, zoom: 100, offx: 0, offy: 0, anchor: 'center', crop: 100, floorauto: '0', floor: 0, minop: 10, ssize: 100, maxblob: 40, bright: 100, contrast: 115, sat: 120, light: -45, lit: 'unlit', colors: 12, cutoff: 45, outline: 'outer', frames: 1 };
+      const all = Object.assign({}, defaults, r);
+      for (const k of ['fs', 'fox', 'foy', 'name', 'w', 'h', 'view', 'up', 'yaw', 'pitch', 'roll', 'zoom', 'offx', 'offy', 'anchor', 'crop', 'floorauto', 'floor', 'minop', 'ssize', 'maxblob', 'bright', 'contrast', 'sat', 'light', 'lit', 'colors', 'cutoff', 'outline', 'frames']) set(k, all[k]);
+      if (r.clip !== undefined) { let ci = r.clip; if (typeof ci === 'string') ci = clips.findIndex(c => c.name === ci); set('clip', String(ci)); }
+      clearTimeout(timer); bake();
+      return lastSheet.canvas.toDataURL('image/png');
+    },
+    dbg: () => ({ center, radius, med: splat && splat.medScale, kept: splat ? keepMask(splat, upFix()).reduce((a, b) => a + b, 0) : 0 }), loadFile, bake, get sheet() { return lastSheet; }, fileName: () => fileName() };
+  drawGame();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+[
+ {
+  "name": "test_hero",
+  "file": "../../Source/game/assets/hero_sword.glb",
+  "w": 47,
+  "h": 47,
+  "anchor": "fixed",
+  "fs": 15.795,
+  "fox": 23,
+  "foy": 43,
+  "yaw": 0
+ },
+ {
+  "name": "test_skeleton",
+  "file": "../../Source/game/assets/mob_skel.glb",
+  "w": 35,
+  "h": 40,
+  "anchor": "fixed",
+  "fs": 15.795,
+  "fox": 18,
+  "foy": 37,
+  "yaw": -45
+ },
+ {
+  "name": "test_barrel",
+  "file": "../../Source/game/assets/p_barrel.glb",
+  "w": 15,
+  "h": 18,
+  "anchor": "feet"
+ },
+ {
+  "name": "test_wall",
+  "file": "../../Source/game/assets/t_wall_0.glb",
+  "w": 28,
+  "h": 47,
+  "anchor": "tile"
+ },
+ {
+  "name": "test_well",
+  "file": "../../Source/game/assets/p_well.glb",
+  "w": 28,
+  "h": 30,
+  "anchor": "feet"
+ }
+]

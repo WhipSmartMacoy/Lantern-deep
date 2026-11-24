@@ -1,0 +1,47 @@
+{
+ "id": "glowing-red-one-handed-sword-with-flames",
+ "game": "deep",
+ "prompt": "glowing red one handed sword with flames and a gold hilt",
+ "spec": {
+  "flags": [
+   "glowing"
+  ],
+  "kind": "sword",
+  "word": "sword",
+  "color": "red",
+  "len": 0.9,
+  "element": "fire",
+  "part_mats": [
+   [
+    "hilt",
+    "metal",
+    "gold"
+   ]
+  ]
+ },
+ "seed": 351785,
+ "size": 32,
+ "engine": "CYCLES",
+ "understood": "Sword \u00b7 gold hilt \u00b7 element: fire \u00b7 colour: red \u00b7 glowing \u00b7 length x0.9",
+ "ignored": [],
+ "note": "",
+ "parts": [
+  "Blade",
+  "Crossguard",
+  "Grip",
+  "Pommel",
+  "Flame lick 1",
+  "Flame lick 2",
+  "Flame lick 3",
+  "Flame lick 4",
+  "Flame lick 5",
+  "Flame lick 6",
+  "Flame lick 7",
+  "Flame lick 8",
+  "Flame lick 9",
+  "Flame lick 10"
+ ],
+ "has_blend": true,
+ "time": 1795471840.5171335,
+ "seconds": 0.7
+}

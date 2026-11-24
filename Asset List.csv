@@ -1,0 +1,152 @@
+﻿category,asset,file,size,frames,directions,anchor,source,used_for,status,forge_prompt
+Hero,Mage (staff) - attack,hero_staff_attack_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - cast,hero_staff_cast_0..4__47x47_o23x43.png,47x47,7,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - death,hero_staff_death_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - hurt,hero_staff_hurt_0..4__47x47_o23x43.png,47x47,3,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - idle,hero_staff_idle_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - roll,hero_staff_roll_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Mage (staff) - walk,hero_staff_walk_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_staff.glb,"animated character (one file per direction, frames side by side)",original,a mage with a staff and robe
+Hero,Ranger (bow) - attack,hero_bow_attack_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - cast,hero_bow_cast_0..4__47x47_o23x43.png,47x47,7,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - death,hero_bow_death_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - hurt,hero_bow_hurt_0..4__47x47_o23x43.png,47x47,3,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - idle,hero_bow_idle_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - roll,hero_bow_roll_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Ranger (bow) - walk,hero_bow_walk_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_bow.glb,"animated character (one file per direction, frames side by side)",original,a ranger with a bow and hood
+Hero,Warrior (sword & shield) - attack,hero_sword_attack_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - cast,hero_sword_cast_0..4__47x47_o23x43.png,47x47,7,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - death,hero_sword_death_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - hurt,hero_sword_hurt_0..4__47x47_o23x43.png,47x47,3,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - idle,hero_sword_idle_0..4__47x47_o23x43.png,47x47,6,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - roll,hero_sword_roll_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Hero,Warrior (sword & shield) - walk,hero_sword_walk_0..4__47x47_o23x43.png,47x47,8,5,"23,43",assets/hero_sword.glb,"animated character (one file per direction, frames side by side)",original,a warrior with sword and shield
+Monster,Brute - attack,mob_brute_attack_0..1__49x49_o25x46.png,49x49,5,2,"25,46",assets/mob_brute.glb,"animated character (one file per direction, frames side by side)",original,a hulking brute with a big club
+Monster,Brute - walk,mob_brute_walk_0..1__49x49_o25x46.png,49x49,6,2,"25,46",assets/mob_brute.glb,"animated character (one file per direction, frames side by side)",original,a hulking brute with a big club
+Monster,Goblin - attack,mob_gob_attack_0..1__35x34_o18x31.png,35x34,5,2,"18,31",assets/mob_gob.glb,"animated character (one file per direction, frames side by side)",original,a goblin with a crude club
+Monster,Goblin - walk,mob_gob_walk_0..1__35x34_o18x31.png,35x34,6,2,"18,31",assets/mob_gob.glb,"animated character (one file per direction, frames side by side)",original,a goblin with a crude club
+Monster,Rat - attack,mob_rat_attack_0..1__39x22_o19x19.png,39x22,5,2,"19,19",assets/mob_rat.glb,"animated character (one file per direction, frames side by side)",original,a mangy cave rat
+Monster,Rat - walk,mob_rat_walk_0..1__39x22_o19x19.png,39x22,6,2,"19,19",assets/mob_rat.glb,"animated character (one file per direction, frames side by side)",original,a mangy cave rat
+Monster,Skeleton - attack,mob_skel_attack_0..1__35x40_o18x37.png,35x40,5,2,"18,37",assets/mob_skel.glb,"animated character (one file per direction, frames side by side)",original,a skeleton warrior with a rusty sword
+Monster,Skeleton - walk,mob_skel_walk_0..1__35x40_o18x37.png,35x40,6,2,"18,37",assets/mob_skel.glb,"animated character (one file per direction, frames side by side)",original,a skeleton warrior with a rusty sword
+Monster,Spider - attack,mob_spider_attack_0..1__42x25_o21x22.png,42x25,5,2,"21,22",assets/mob_spider.glb,"animated character (one file per direction, frames side by side)",original,a giant cave spider with fangs
+Monster,Spider - walk,mob_spider_walk_0..1__42x25_o21x22.png,42x25,6,2,"21,22",assets/mob_spider.glb,"animated character (one file per direction, frames side by side)",original,a giant cave spider with fangs
+Monster,Wraith - attack,mob_wraith_attack_0..1__39x43_o19x40.png,39x43,5,2,"19,40",assets/mob_wraith.glb,"animated character (one file per direction, frames side by side)",original,a floating hooded wraith with glowing eyes
+Monster,Wraith - walk,mob_wraith_walk_0..1__39x43_o19x40.png,39x43,6,2,"19,40",assets/mob_wraith.glb,"animated character (one file per direction, frames side by side)",original,a floating hooded wraith with glowing eyes
+Town NPC,Blacksmith - idle,npc_smith_idle_0..0__39x43_o19x40.png,39x43,6,1,"19,40",assets/npc_smith.glb,"animated character (one file per direction, frames side by side)",original,a blacksmith with a hammer
+Town NPC,Jeweler - idle,npc_jeweler_idle_0..0__39x43_o19x40.png,39x43,6,1,"19,40",assets/npc_jeweler.glb,"animated character (one file per direction, frames side by side)",original,a jeweler with a loupe
+Town NPC,Merchant - idle,npc_merchant_idle_0..0__39x43_o19x40.png,39x43,6,1,"19,40",assets/npc_merchant.glb,"animated character (one file per direction, frames side by side)",original,a merchant with an apron
+Town NPC,Trainer - idle,npc_trainer_idle_0..0__39x43_o19x40.png,39x43,6,1,"19,40",assets/npc_trainer.glb,"animated character (one file per direction, frames side by side)",original,an old trainer with a cane
+Item - Majestic icon,Majestic unique: crown,i_maj_crown__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: heart,i_maj_heart__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: heavensplit,i_maj_heavensplit__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: midas,i_maj_midas__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: shroud,i_maj_shroud__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: starfall,i_maj_starfall__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - Majestic icon,Majestic unique: twinfang,i_maj_twinfang__16x16.png,16x16,1,1,,hand-drawn (tools/majestic_art.py),"inventory + ground (hand-drawn, not from a model)",original,
+Item - inventory icon,amulet,i_amulet__16x16.png,16x16,1,1,,assets/i_amulet.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,boots,i_boots__16x16.png,16x16,1,1,,assets/i_boots.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,bow,i_bow__16x16.png,16x16,1,1,,assets/i_bow.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,cape,i_cape__16x16.png,16x16,1,1,,assets/i_cape.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,chest,i_chest__16x16.png,16x16,1,1,,assets/i_chest.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,gloves,i_gloves__16x16.png,16x16,1,1,,assets/i_gloves.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,gold,i_gold__16x16.png,16x16,1,1,,assets/i_gold.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,helm,i_helm__16x16.png,16x16,1,1,,assets/i_helm.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,legs,i_legs__16x16.png,16x16,1,1,,assets/i_legs.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,mpotion,i_mpotion__16x16.png,16x16,1,1,,assets/i_mpotion.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,potion,i_potion__16x16.png,16x16,1,1,,assets/i_potion.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,quiver,i_quiver__16x16.png,16x16,1,1,,assets/i_quiver.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,ring,i_ring__16x16.png,16x16,1,1,,assets/i_ring.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,shield,i_shield__16x16.png,16x16,1,1,,assets/i_shield.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,staff,i_staff__16x16.png,16x16,1,1,,assets/i_staff.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,sword,i_sword__16x16.png,16x16,1,1,,assets/i_sword.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,tome,i_tome__16x16.png,16x16,1,1,,assets/i_tome.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - inventory icon,treasure chest,i_chestbox__21x19.png,21x19,1,1,,assets/i_chestbox.glb,"inventory, shop, stash (recoloured in 5 material looks by item level)",original,
+Item - ground sprite,amulet,g_amulet__11x10.png,11x10,1,1,,,dropped on the floor,original,
+Item - ground sprite,boots,g_boots__13x11.png,13x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,bow,g_bow__17x12.png,17x12,1,1,,,dropped on the floor,original,
+Item - ground sprite,cape,g_cape__14x11.png,14x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,chest,g_chest__13x13.png,13x13,1,1,,,dropped on the floor,original,
+Item - ground sprite,gloves,g_gloves__12x10.png,12x10,1,1,,,dropped on the floor,original,
+Item - ground sprite,gold,g_gold__12x9.png,12x9,1,1,,,dropped on the floor,original,
+Item - ground sprite,helm,g_helm__12x11.png,12x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,legs,g_legs__13x11.png,13x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,mpotion,g_mpotion__8x11.png,8x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,potion,g_potion__8x11.png,8x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,quiver,g_quiver__14x11.png,14x11,1,1,,,dropped on the floor,original,
+Item - ground sprite,ring,g_ring__9x8.png,9x8,1,1,,,dropped on the floor,original,
+Item - ground sprite,shield,g_shield__14x12.png,14x12,1,1,,,dropped on the floor,original,
+Item - ground sprite,staff,g_staff__20x12.png,20x12,1,1,,,dropped on the floor,original,
+Item - ground sprite,sword,g_sword__18x12.png,18x12,1,1,,,dropped on the floor,original,
+Item - ground sprite,tome,g_tome__12x10.png,12x10,1,1,,,dropped on the floor,original,
+Weapon in hand,bow,w_bow__8x16.png,8x16,1,1,,assets/w_bow.glb,drawn in the hero's hand,original,
+Weapon in hand,staff,w_staff__6x20.png,6x20,1,1,,assets/w_staff.glb,drawn in the hero's hand,original,
+Weapon in hand,sword,w_sword__7x15.png,7x15,1,1,,assets/w_sword.glb,drawn in the hero's hand,original,
+Tile,cobble variant 0,t_cobble_0__28x22.png,28x22,1,1,,assets/t_cobble_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,cobble variant 1,t_cobble_1__28x22.png,28x22,1,1,,assets/t_cobble_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,cobble variant 2,t_cobble_2__28x22.png,28x22,1,1,,assets/t_cobble_2.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,dirt variant 0,t_dirt_0__28x22.png,28x22,1,1,,assets/t_dirt_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,dirt variant 1,t_dirt_1__28x22.png,28x22,1,1,,assets/t_dirt_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,dirt variant 2,t_dirt_2__28x22.png,28x22,1,1,,assets/t_dirt_2.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,floor variant 0,t_floor_0__28x22.png,28x22,1,1,,assets/t_floor_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,floor variant 1,t_floor_1__28x22.png,28x22,1,1,,assets/t_floor_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,floor variant 2,t_floor_2__28x22.png,28x22,1,1,,assets/t_floor_2.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,floor variant 3,t_floor_3__28x22.png,28x22,1,1,,assets/t_floor_3.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,grass variant 0,t_grass_0__28x22.png,28x22,1,1,,assets/t_grass_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,grass variant 1,t_grass_1__28x22.png,28x22,1,1,,assets/t_grass_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,grass variant 2,t_grass_2__28x22.png,28x22,1,1,,assets/t_grass_2.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,stairs variant 0,t_stairs_0__28x22.png,28x22,1,1,,assets/t_stairs_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,stairs variant 1,t_stairs_1__28x22.png,28x22,1,1,,assets/t_stairs_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,wall variant 0,t_wall_0__28x47.png,28x47,1,1,,assets/t_wall_0.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,wall variant 1,t_wall_1__28x47.png,28x47,1,1,,assets/t_wall_1.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,wall variant 2,t_wall_2__28x47.png,28x47,1,1,,assets/t_wall_2.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Tile,wall variant 3,t_wall_3__28x47.png,28x47,1,1,,assets/t_wall_3.glb,"floor / wall / stairs (full colour, lit by the GPU)",original,
+Prop,barrel,p_barrel__15x18.png,15x18,1,1,,assets/p_barrel.glb,dungeon and town decoration (full colour),original,
+Prop,bench,p_bench__24x15.png,24x15,1,1,,assets/p_bench.glb,dungeon and town decoration (full colour),original,
+Prop,bones,p_bones__18x11.png,18x11,1,1,,assets/p_bones.glb,dungeon and town decoration (full colour),original,
+Prop,brazier,p_brazier__17x18.png,17x18,1,1,,assets/p_brazier.glb,dungeon and town decoration (full colour),original,
+Prop,bush,p_bush__17x15.png,17x15,1,1,,assets/p_bush.glb,dungeon and town decoration (full colour),original,
+Prop,candles,p_candles__13x12.png,13x12,1,1,,assets/p_candles.glb,dungeon and town decoration (full colour),original,
+Prop,cart,p_cart__28x21.png,28x21,1,1,,assets/p_cart.glb,dungeon and town decoration (full colour),original,
+Prop,crate,p_crate__19x17.png,19x17,1,1,,assets/p_crate.glb,dungeon and town decoration (full colour),original,
+Prop,fence,p_fence__30x15.png,30x15,1,1,,assets/p_fence.glb,dungeon and town decoration (full colour),original,
+Prop,fern,p_fern__20x12.png,20x12,1,1,,assets/p_fern.glb,dungeon and town decoration (full colour),original,
+Prop,flowerbed,p_flowerbed__28x17.png,28x17,1,1,,assets/p_flowerbed.glb,dungeon and town decoration (full colour),original,
+Prop,flowers,p_flowers__18x12.png,18x12,1,1,,assets/p_flowers.glb,dungeon and town decoration (full colour),original,
+Prop,hedge,p_hedge__30x17.png,30x17,1,1,,assets/p_hedge.glb,dungeon and town decoration (full colour),original,
+Prop,lamp,p_lamp__10x36.png,10x36,1,1,,assets/p_lamp.glb,dungeon and town decoration (full colour),original,
+Prop,log,p_log__27x12.png,27x12,1,1,,assets/p_log.glb,dungeon and town decoration (full colour),original,
+Prop,mushroom,p_mushroom__14x11.png,14x11,1,1,,assets/p_mushroom.glb,dungeon and town decoration (full colour),original,
+Prop,pillar,p_pillar__18x26.png,18x26,1,1,,assets/p_pillar.glb,dungeon and town decoration (full colour),original,
+Prop,rock,p_rock__17x11.png,17x11,1,1,,assets/p_rock.glb,dungeon and town decoration (full colour),original,
+Prop,rubble,p_rubble__18x11.png,18x11,1,1,,assets/p_rubble.glb,dungeon and town decoration (full colour),original,
+Prop,stump,p_stump__14x11.png,14x11,1,1,,assets/p_stump.glb,dungeon and town decoration (full colour),original,
+Prop,tallgrass,p_tallgrass__18x14.png,18x14,1,1,,assets/p_tallgrass.glb,dungeon and town decoration (full colour),original,
+Prop,torch,p_torch__9x30.png,9x30,1,1,,assets/p_torch.glb,dungeon and town decoration (full colour),original,
+Prop,urn,p_urn__13x15.png,13x15,1,1,,assets/p_urn.glb,dungeon and town decoration (full colour),original,
+Prop,well,p_well__28x30.png,28x30,1,1,,assets/p_well.glb,dungeon and town decoration (full colour),original,
+Tree,tree,tree__31x44.png,31x44,1,1,,assets/tree.glb,town and caves (full colour),original,
+Tree,tree_1,tree_1__31x44.png,31x44,1,1,,assets/tree_1.glb,town and caves (full colour),original,
+Tree,tree_2,tree_2__31x44.png,31x44,1,1,,assets/tree_2.glb,town and caves (full colour),original,
+Town building,Jeweler shop,b_jeweler__146x174_o73x108.png,146x174,1,1,"73,108",assets/b_jeweler.glb,town (full colour),original,
+Town building,Merchant shop,b_merchant__146x174_o73x108.png,146x174,1,1,"73,108",assets/b_merchant.glb,town (full colour),original,
+Town building,Smithy,b_smith__146x174_o73x108.png,146x174,1,1,"73,108",assets/b_smith.glb,town (full colour),original,
+Town building,Trainer hall,b_trainer__146x174_o73x108.png,146x174,1,1,"73,108",assets/b_trainer.glb,town (full colour),original,
+Code-drawn,Font 4x7 + small 3x5,(none),,,,,"src/gfx.c, tools/font4x7.py",all text,code,
+Code-drawn,Gems: 6 kinds x 5 qualities,(none),,,,,src/render.c draw_gem_icon,"gems tab, jeweler, ground",code,
+Code-drawn,"Projectiles: arrow, firebolt, ice bolt, lightning, enemy arrow, enemy orb",(none),,,,,src/render.c draw_proj,combat,code,
+Code-drawn,"Effects: sparks, hit flashes, glows, light pools, fog, embers, dust motes",(none),,,,,src/render.c,combat and ambience,code,
+Code-drawn,Elixir flasks (recoloured health potion),(none),,,,,src/render.c g_remap_elix,"pouch, timers, ground",code,
+Code-drawn,Item material looks (rusted/steel/blued/silvered/obsidian),(none),,,,,src/render.c g_remap_band,all item icons,code,
+Code-drawn,"Champions / elites / guardians (recoloured, scaled monsters)",(none),,,,,src/render.c,dungeon,code,
+Code-drawn,"HUD, menus, map, title, hero-select chamber",(none),,,,,"src/render.c, src/menu.c",UI,code,
+Code-drawn,All sound effects and music (synthesised),(none),,,,,src/sound.c,audio,code,
+Unused model,hero,(none),,,,,assets/hero.glb,not in the game (older or spare model),unused,
+Unused model,m_brute,(none),,,,,assets/m_brute.glb,not in the game (older or spare model),unused,
+Unused model,m_gob,(none),,,,,assets/m_gob.glb,not in the game (older or spare model),unused,
+Unused model,m_rat,(none),,,,,assets/m_rat.glb,not in the game (older or spare model),unused,
+Unused model,m_skel,(none),,,,,assets/m_skel.glb,not in the game (older or spare model),unused,
+Unused model,m_spider,(none),,,,,assets/m_spider.glb,not in the game (older or spare model),unused,
+Unused model,m_wraith,(none),,,,,assets/m_wraith.glb,not in the game (older or spare model),unused,
+Unused model,t_house_0,(none),,,,,assets/t_house_0.glb,not in the game (older or spare model),unused,
+Unused model,t_house_1,(none),,,,,assets/t_house_1.glb,not in the game (older or spare model),unused,
+Unused model,t_stub,(none),,,,,assets/t_stub.glb,not in the game (older or spare model),unused,

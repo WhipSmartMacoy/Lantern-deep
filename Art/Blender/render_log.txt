@@ -1,0 +1,58 @@
+[lantern] Blender 5.3.0 - 5 jobs
+C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\tools\lantern_render.py:30: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new('LanternWorld'); sc.world = w; w.use_nodes = True
+16:56:14 | INFO: Data are loaded, start creating Blender stuff
+16:56:14 | INFO: Blender create Mesh node 0
+16:56:14 | INFO: Blender create Mesh node 1
+16:56:14 | INFO: Blender create Mesh node 2
+16:56:14 | INFO: Blender create Mesh node 3
+16:56:14 | INFO: Blender create Mesh node 4
+16:56:14 | INFO: Blender create Mesh node 5
+16:56:14 | INFO: Blender create Mesh node 6
+16:56:14 | INFO: Blender create Mesh node 7
+16:56:14 | INFO: Blender create Mesh node 8
+16:56:14 | INFO: Blender create Mesh node 9
+16:56:14 | INFO: Blender create Mesh node 10
+16:56:14 | INFO: glTF import finished in 0.02s
+C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\tools\lantern_render.py:45: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  if any(s.material and s.material.use_nodes and any(n.type == 'TEX_IMAGE' for n in s.material.node_tree.nodes) for s in o.material_slots):
+C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\tools\lantern_render.py:47: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m = bpy.data.materials.new('vc_' + o.name); m.use_nodes = True
+00:02.609  render           | Saved: 'C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\renders\test_hero__47x47.png'
+[lantern] rendered test_hero
+C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\tools\lantern_render.py:30: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new('LanternWorld'); sc.world = w; w.use_nodes = True
+16:56:14 | INFO: Data are loaded, start creating Blender stuff
+16:56:14 | INFO: Blender create Mesh node 0
+16:56:14 | INFO: Blender create Mesh node 1
+16:56:14 | INFO: Blender create Mesh node 2
+16:56:14 | INFO: Blender create Mesh node 3
+16:56:14 | INFO: Blender create Mesh node 4
+16:56:14 | INFO: Blender create Mesh node 5
+16:56:14 | INFO: Blender create Mesh node 6
+16:56:14 | INFO: Blender create Mesh node 7
+16:56:14 | INFO: Blender create Mesh node 8
+16:56:14 | INFO: Blender create Mesh node 9
+16:56:14 | INFO: Blender create Mesh node 10
+16:56:14 | INFO: glTF import finished in 0.01s
+00:02.765  render           | Saved: 'C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\renders\test_skeleton__35x40.png'
+[lantern] rendered test_skeleton
+16:56:14 | INFO: Data are loaded, start creating Blender stuff
+16:56:14 | INFO: Blender create Mesh node 0
+16:56:14 | INFO: glTF import finished in 0.00s
+00:02.875  render           | Saved: 'C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\renders\test_barrel__15x18.png'
+[lantern] rendered test_barrel
+16:56:14 | INFO: Data are loaded, start creating Blender stuff
+16:56:14 | INFO: Blender create Mesh node 0
+16:56:14 | INFO: glTF import finished in 0.01s
+00:03.422  render           | Saved: 'C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\renders\test_wall__28x47.png'
+[lantern] rendered test_wall
+16:56:15 | INFO: Data are loaded, start creating Blender stuff
+16:56:15 | INFO: Blender create Mesh node 0
+16:56:15 | INFO: glTF import finished in 0.00s
+00:03.640  render           | Saved: 'C:\Users\parke\Documents\Projects\Lantern Deep\Art\Blender\renders\test_well__28x30.png'
+[lantern] rendered test_well
+[lantern] finished: 5 of 5
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

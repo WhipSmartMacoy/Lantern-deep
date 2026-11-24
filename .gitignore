@@ -1,0 +1,9 @@
+# never upload saves
+Saves/
+*.sav
+# build leftovers
+Source/game/build/
+**/projects/db/
+**/projects/incremental_db/
+**/projects/output_files/
+*.stp

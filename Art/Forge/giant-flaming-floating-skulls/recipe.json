@@ -1,0 +1,40 @@
+{
+ "id": "giant-flaming-floating-skulls",
+ "game": "deep",
+ "prompt": "Giant flaming floating skulls",
+ "spec": {
+  "flags": [],
+  "kind": "skull",
+  "word": "skull",
+  "wid": 1.35,
+  "element": "fire"
+ },
+ "seed": 757216,
+ "size": 64,
+ "engine": "CYCLES",
+ "understood": "Skull \u00b7 element: fire \u00b7 width x1.4",
+ "ignored": [],
+ "note": "Re-baked from your edited Blender file.",
+ "parts": [
+  "Cranium",
+  "Jaw",
+  "Nose hole",
+  "Eye socket",
+  "Eye socket 2",
+  "Tooth 1",
+  "Tooth 2",
+  "Tooth 3",
+  "Tooth 4",
+  "Tooth 5",
+  "Fire coating",
+  "Flame lick 1",
+  "Flame lick 2",
+  "Flame lick 3",
+  "Flame lick 4",
+  "Flame lick 5",
+  "Flame lick 6"
+ ],
+ "has_blend": true,
+ "time": 1795472351.6355765,
+ "seconds": 1.3
+}

@@ -1,0 +1,37 @@
+{
+ "id": "flaming-poison-sword-with-a-glowing-aura",
+ "game": "deep",
+ "prompt": "flaming poison sword with a glowing aura",
+ "spec": {
+  "flags": [
+   "glowing"
+  ],
+  "kind": "sword",
+  "word": "sword",
+  "element": "poison"
+ },
+ "seed": 785310,
+ "size": 32,
+ "engine": "CYCLES",
+ "understood": "Sword \u00b7 element: poison \u00b7 glowing",
+ "ignored": [
+  "aura"
+ ],
+ "note": "",
+ "parts": [
+  "Blade",
+  "Crossguard",
+  "Grip",
+  "Pommel",
+  "Poison coating",
+  "Poison drip 1",
+  "Poison drip 2",
+  "Poison drip 3",
+  "Poison drip 4",
+  "Poison drip 5",
+  "Poison drip 6"
+ ],
+ "has_blend": true,
+ "time": 1795471835.3648937,
+ "seconds": 0.6
+}

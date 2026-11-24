@@ -1,0 +1,20 @@
+Lantern Deep build  2026-11-24 07:59:29
+Checking tools...
+  Python 3.12.10 with Pillow and NumPy: OK
+  clang version 23.1.6 (https://github.com/llvm/llvm-project 5b10d2d74929eae78912771222c9855af97496f4): C:\Program Files\LLVM\bin\clang.exe
+  Everything needed is installed.
+Building Lantern Deep...
+  Art: art\*.png -> src\art_data.h
+    45 sprites imported
+  Pocket: compiling the game
+  Pocket: start-up code
+  Pocket: linking
+  Pocket: boot.bin
+  PC test: compiling
+  PC test: page
+Built in 8 s: boot.bin 1361 KB, PC test page 1846 KB.
+Installed:
+  C:\Users\parke\Documents\Projects\Lantern Deep\Pocket SD\Assets\lanterndeep\common\boot.bin   (the Pocket Updater copies it to the card)
+  C:\Users\parke\Documents\Projects\Lantern Deep\Lantern Deep - PC test.html   (double-click to play on the PC)
+The previous versions are in C:\Users\parke\Documents\Projects\Lantern Deep\Source\game\build\previous
+DONE

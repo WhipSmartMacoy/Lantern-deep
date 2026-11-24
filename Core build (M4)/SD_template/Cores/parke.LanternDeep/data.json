@@ -1,0 +1,32 @@
+{
+  "data": {
+    "magic": "APF_VER_1",
+    "data_slots": [
+      {
+        "name": "Program",
+        "id": 0,
+        "required": true,
+        "filename": "boot.bin",
+        "parameters": "0x49",
+        "deferload": true,
+        "extensions": [
+          "bin"
+        ],
+        "address": "0x00000000"
+      },
+      {
+        "name": "Save",
+        "id": 1,
+        "required": false,
+        "parameters": "0x4",
+        "nonvolatile": true,
+        "deferload": true,
+        "extensions": [
+          "sav"
+        ],
+        "size_maximum": "0x10000",
+        "address": "0x00000000"
+      }
+    ]
+  }
+}

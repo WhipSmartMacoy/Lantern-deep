@@ -1,0 +1,204 @@
+{
+ "tilebox": null,
+ "keep_top": false,
+ "outline": true,
+ "creature": true,
+ "body_defaults": {},
+ "id": "small-rat-with-fangs",
+ "game": "deep",
+ "prompt": "small rat with fangs",
+ "spec": {
+  "flags": [],
+  "kind": "quad",
+  "word": "rat",
+  "cfg": {
+   "head": "rodent",
+   "col": "#6a5a50",
+   "L": 0.9,
+   "bw": 0.26,
+   "bh": 0.24,
+   "leg": 0.22,
+   "legr": 0.05,
+   "hr": 0.21,
+   "snout": 0.3,
+   "ears": "round",
+   "tail": "long"
+  },
+  "len": 0.85,
+  "features": [
+   "fangs"
+  ],
+  "body": {
+   "head": 116.0,
+   "torso": 97.0
+  }
+ },
+ "seed": 784734,
+ "engine": "CYCLES",
+ "trim": false,
+ "model": false,
+ "understood": "Rat \u00b7 with fangs \u00b7 length x0.85",
+ "ignored": [],
+ "note": "Body parts: head 116%, torso 97%.",
+ "history": [
+  {
+   "flags": [],
+   "kind": "quad",
+   "word": "rat",
+   "cfg": {
+    "head": "rodent",
+    "col": "#6a5a50",
+    "L": 0.9,
+    "bw": 0.26,
+    "bh": 0.24,
+    "leg": 0.22,
+    "legr": 0.05,
+    "hr": 0.21,
+    "snout": 0.3,
+    "ears": "round",
+    "tail": "long"
+   },
+   "len": 0.85,
+   "features": [
+    "fangs"
+   ]
+  },
+  {
+   "flags": [],
+   "kind": "quad",
+   "word": "rat",
+   "cfg": {
+    "head": "rodent",
+    "col": "#6a5a50",
+    "L": 0.9,
+    "bw": 0.26,
+    "bh": 0.24,
+    "leg": 0.22,
+    "legr": 0.05,
+    "hr": 0.21,
+    "snout": 0.3,
+    "ears": "round",
+    "tail": "long"
+   },
+   "len": 0.85,
+   "features": [
+    "fangs"
+   ],
+   "body": {
+    "head": 165.0
+   }
+  },
+  {
+   "flags": [],
+   "kind": "quad",
+   "word": "rat",
+   "cfg": {
+    "head": "rodent",
+    "col": "#6a5a50",
+    "L": 0.9,
+    "bw": 0.26,
+    "bh": 0.24,
+    "leg": 0.22,
+    "legr": 0.05,
+    "hr": 0.21,
+    "snout": 0.3,
+    "ears": "round",
+    "tail": "long"
+   },
+   "len": 0.85,
+   "features": [
+    "fangs"
+   ],
+   "body": {
+    "head": 116.0
+   }
+  },
+  {
+   "flags": [],
+   "kind": "quad",
+   "word": "rat",
+   "cfg": {
+    "head": "rodent",
+    "col": "#6a5a50",
+    "L": 0.9,
+    "bw": 0.26,
+    "bh": 0.24,
+    "leg": 0.22,
+    "legr": 0.05,
+    "hr": 0.21,
+    "snout": 0.3,
+    "ears": "round",
+    "tail": "long"
+   },
+   "len": 0.85,
+   "features": [
+    "fangs"
+   ],
+   "body": {
+    "head": 116.0,
+    "torso": 123.0
+   }
+  },
+  {
+   "flags": [],
+   "kind": "quad",
+   "word": "rat",
+   "cfg": {
+    "head": "rodent",
+    "col": "#6a5a50",
+    "L": 0.9,
+    "bw": 0.26,
+    "bh": 0.24,
+    "leg": 0.22,
+    "legr": 0.05,
+    "hr": 0.21,
+    "snout": 0.3,
+    "ears": "round",
+    "tail": "long"
+   },
+   "len": 0.85,
+   "features": [
+    "fangs"
+   ],
+   "body": {
+    "head": 116.0,
+    "torso": 97.0
+   }
+  }
+ ],
+ "changes": [
+  "body sliders",
+  "body sliders",
+  "body sliders",
+  "body sliders",
+  "body sliders"
+ ],
+ "parts": [
+  "Body",
+  "Neck",
+  "Head",
+  "Snout",
+  "Nose",
+  "Eye left",
+  "Eye right",
+  "Ear left",
+  "Ear right",
+  "Front left leg",
+  "Front right leg",
+  "Back left leg",
+  "Back right leg",
+  "Tail",
+  "Fang left",
+  "Fang right"
+ ],
+ "has_blend": true,
+ "time": 1795523852.5308037,
+ "seconds": 2.2,
+ "size": [
+  42,
+  28
+ ],
+ "size_what": "four-legged monster",
+ "anchor": "bottom",
+ "sprite": "sprite_42x28.png"
+}

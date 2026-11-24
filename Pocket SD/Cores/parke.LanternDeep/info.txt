@@ -1,0 +1,2 @@
+Lantern Deep - custom core with the Lantern GPU drawing engine.
+Built on agg23's openFPGA RISC-V core (MIT licence).

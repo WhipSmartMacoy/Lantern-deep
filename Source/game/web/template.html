@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Lantern Deep</title>
+<style>
+  :root { --body:#1b1a1f; --edge:#2a2830; --btn:#34313b; --btn-on:#57505f; --ink:#cfc6b8; --dim:#7d7468; --amber:#f0b45a; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  html, body { margin: 0; height: 100%; background: #0d0c10; color: var(--ink); font-family: ui-monospace, Menlo, Consolas, monospace; overflow: hidden; touch-action: none; }
+  .wrap { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px 10px 14px; gap: 10px; }
+  .screen { width: min(100%, calc((100vh - 270px) * 266 / 240), 798px); min-width: 266px; aspect-ratio: 266 / 240; background: #000; border: 6px solid #050507; border-radius: 6px; box-shadow: 0 0 0 1px var(--edge); }
+  canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+  .pad { width: min(100%, 520px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+  .shoulders { width: min(100%, 520px); display: flex; justify-content: space-between; }
+  .sh { width: 120px; height: 34px; border-radius: 10px; font-size: 11px; }
+  .dpad { position: relative; width: 138px; height: 138px; justify-self: start; }
+  .dpad .b { position: absolute; width: 46px; height: 46px; border-radius: 6px; }
+  .d-up { left: 46px; top: 0; } .d-down { left: 46px; bottom: 0; } .d-left { left: 0; top: 46px; } .d-right { right: 0; top: 46px; }
+  .d-mid { position: absolute; left: 46px; top: 46px; width: 46px; height: 46px; background: var(--btn); }
+  .dpad { touch-action: none; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.05) 0 60%, transparent 61%); }
+  .face { position: relative; width: 138px; height: 138px; justify-self: end; }
+  .face .b { position: absolute; width: 50px; height: 50px; border-radius: 50%; font-size: 15px; }
+  .f-x { left: 44px; top: 0; } .f-b { left: 44px; bottom: 0; } .f-y { left: 0; top: 44px; } .f-a { right: 0; top: 44px; }
+  .mid { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .pill { width: 62px; height: 22px; border-radius: 11px; font-size: 10px; }
+  .b { background: var(--btn); color: var(--ink); border: none; display: flex; align-items: center; justify-content: center; font: inherit; font-weight: 600; box-shadow: inset 0 -3px 0 rgba(0,0,0,.35); }
+  .b.on { background: var(--btn-on); box-shadow: inset 0 2px 0 rgba(0,0,0,.35); }
+  .lbl { font-size: 9px; color: var(--dim); text-align: center; line-height: 1.3; }
+  .keys { font-size: 11px; color: var(--dim); text-align: center; max-width: 560px; line-height: 1.6; }
+  .keys b { color: var(--amber); font-weight: 600; }
+  @media (hover: hover) and (pointer: fine) { .touch { display: none; } .screen { width: min(100%, calc((100vh - 70px) * 266 / 240), 798px); } }
+  @media not ((hover: hover) and (pointer: fine)) { .keys { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="screen"><canvas id="c" width="266" height="240"></canvas></div>
+  <div class="shoulders touch">
+    <button class="b sh" data-btn="256">L · SKILL 3</button>
+    <button class="b sh" data-btn="512">R · SKILL 4</button>
+  </div>
+  <div class="pad touch">
+    <div class="dpad">
+      <div class="d-mid"></div>
+      <button class="b d-up" data-btn="1">▲</button>
+      <button class="b d-down" data-btn="2">▼</button>
+      <button class="b d-left" data-btn="4">◀</button>
+      <button class="b d-right" data-btn="8">▶</button>
+    </div>
+    <div class="mid">
+      <button class="b pill" data-btn="16384">MAP</button>
+      <button class="b pill" data-btn="32768">MENU</button>
+      <div class="lbl">A ATTACK/USE · B ROLL<br>X Y L R = SKILLS 1-4</div>
+    </div>
+    <div class="face">
+      <button class="b f-x" data-btn="64">X</button>
+      <button class="b f-y" data-btn="128">Y</button>
+      <button class="b f-a" data-btn="16">A</button>
+      <button class="b f-b" data-btn="32">B</button>
+    </div>
+  </div>
+  <div class="keys">
+    <b>Arrows/WASD</b> move · <b>J/Space</b> attack/use (A) · <b>K/Shift</b> roll (B)<br>
+    Skills: <b>1/U</b> (X) · <b>2/I</b> (Y) · <b>3/O</b> (L) · <b>4/P</b> (R) · <b>Enter/Esc</b> menu (Start) · <b>M/Tab</b> map (Select)<br>
+    A <b>game controller</b> works too: face buttons by position, as on the Pocket
+  </div>
+</div>
+<script>
+const WASM_B64 = "__WASM__";
+(async () => {
+  const bytes = Uint8Array.from(atob(WASM_B64), c => c.charCodeAt(0));
+  const { instance } = await WebAssembly.instantiate(bytes, {});
+  const ex = instance.exports, mem = () => ex.memory.buffer;
+  ex.init((Math.random() * 4294967295) >>> 0);
+  // save slot (this browser only)
+  const SAVE_KEY = 'lantern-deep-save-v3';   // three hero slots; an old single v2 save is imported into its class slot
+  try {
+    const b64 = localStorage.getItem(SAVE_KEY) || localStorage.getItem('lantern-deep-save-v2');
+    if (b64) {
+      const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      const n = Math.min(bin.length, ex.save_size());
+      new Uint8Array(mem(), ex.save_ptr(), n).set(bin.subarray(0, n));
+      ex.save_loaded();
+    }
+  } catch (e) {}
+  const flushSave = () => {
+    if (!ex.save_dirty()) return;
+    try {
+      const bytes = new Uint8Array(mem(), ex.save_ptr(), ex.save_size());
+      let s = ''; for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      localStorage.setItem(SAVE_KEY, btoa(s));
+    } catch (e) {}
+  };
+  setInterval(flushSave, 250);
+  addEventListener('pagehide', flushSave);
+  document.addEventListener('visibilitychange', flushSave);
+
+  const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+  const img = ctx.createImageData(266, 240), out = new Uint32Array(img.data.buffer);
+  const lut = new Uint32Array(65536);
+  for (let c = 0; c < 65536; c++) {
+    const r = (c >> 11) & 31, g = (c >> 5) & 63, b = c & 31;
+    lut[c] = 0xff000000 | (((b << 3) | (b >> 2)) << 16) | (((g << 2) | (g >> 4)) << 8) | ((r << 3) | (r >> 2));
+  }
+
+  // input
+  let touchBits = 0, keyBits = 0;
+  const KEYMAP = { ArrowUp:1, KeyW:1, ArrowDown:2, KeyS:2, ArrowLeft:4, KeyA:4, ArrowRight:8, KeyD:8,
+    KeyJ:16, Space:16, KeyK:32, ShiftLeft:32, ShiftRight:32, Digit1:64, KeyU:64, Digit2:128, KeyI:128, Digit3:256, KeyO:256, Digit4:512, KeyP:512,
+    KeyM:16384, Tab:16384, Enter:32768, Escape:32768 };
+  addEventListener('keydown', e => { const b = KEYMAP[e.code]; if (b) { keyBits |= b; e.preventDefault(); startAudio(); } });
+  addEventListener('keyup', e => { const b = KEYMAP[e.code]; if (b) { keyBits &= ~b; e.preventDefault(); } });
+  addEventListener('blur', () => { keyBits = 0; touchBits = 0; });
+  // game controller (Xbox / PlayStation layout): face buttons by position like the Pocket (A right, B bottom, X top, Y left)
+  function padButtons() {
+    let bits = 0;
+    for (const g of (navigator.getGamepads ? navigator.getGamepads() : [])) {
+      if (!g || !g.connected) continue;
+      const B = i => g.buttons[i] && g.buttons[i].pressed;
+      if (B(12) || g.axes[1] < -0.5) bits |= 1;  if (B(13) || g.axes[1] > 0.5) bits |= 2;
+      if (B(14) || g.axes[0] < -0.5) bits |= 4;  if (B(15) || g.axes[0] > 0.5) bits |= 8;
+      if (B(1)) bits |= 16;  if (B(0)) bits |= 32;  if (B(3)) bits |= 64;  if (B(2)) bits |= 128;
+      if (B(4) || B(6)) bits |= 256;  if (B(5) || B(7)) bits |= 512;
+      if (B(8)) bits |= 16384;  if (B(9)) bits |= 32768;
+      if (bits) startAudio();
+    }
+    return bits;
+  }
+  const btns = [...document.querySelectorAll('[data-btn]')];
+  // touch: buttons by element; the d-pad is one zone read by angle, so diagonals are easy with one thumb
+  const active = new Map();   // pointerId -> {el} or {pad: true, x, y}
+  const dpad = document.querySelector('.dpad');
+  function padBits(x, y) {
+    const r = dpad.getBoundingClientRect(), dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height / 2);
+    if (Math.hypot(dx, dy) < r.width * 0.12) return 0;
+    const a = Math.atan2(dy, dx), oct = Math.round(a / (Math.PI / 4)) & 7;   // 0=right, 1=down-right, 2=down ...
+    return [8, 8 | 2, 2, 2 | 4, 4, 4 | 1, 1, 1 | 8][oct];
+  }
+  function recompute() {
+    touchBits = 0; btns.forEach(b => b.classList.remove('on'));
+    for (const v of active.values()) {
+      if (v.pad) { const b = padBits(v.x, v.y); touchBits |= b; dpad.querySelectorAll('[data-btn]').forEach(el => { if (b & +el.dataset.btn) el.classList.add('on'); }); }
+      else { touchBits |= +v.el.dataset.btn; v.el.classList.add('on'); }
+    }
+  }
+  function hit(x, y) {
+    const el = document.elementFromPoint(x, y); if (!el || !el.closest) return null;
+    if (el.closest('.dpad')) return { pad: true, x, y };
+    const b = el.closest('[data-btn]'); return b ? { el: b } : null;
+  }
+  addEventListener('pointerdown', e => { startAudio(); const h = hit(e.clientX, e.clientY); if (h) { active.set(e.pointerId, h); recompute(); e.preventDefault(); } }, { passive: false });
+  addEventListener('pointermove', e => {
+    const v = active.get(e.pointerId); if (!v) return;
+    if (v.pad) { v.x = e.clientX; v.y = e.clientY; }   // thumb can slide anywhere once it started on the pad
+    else { const h = hit(e.clientX, e.clientY); if (h) active.set(e.pointerId, h); }
+    recompute();
+  });
+  const up = e => { if (active.delete(e.pointerId)) recompute(); };
+  addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  addEventListener('contextmenu', e => e.preventDefault());
+
+  // audio (48 kHz mono from the game's synth)
+  let actx = null, node = null;
+  function startAudio() {
+    if (actx) { if (actx.state === 'suspended') actx.resume().catch(() => {}); return; }
+    try {
+      actx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 48000 });
+      node = actx.createScriptProcessor(1024, 0, 1);
+      node.onaudioprocess = ev => {
+        const o = ev.outputBuffer.getChannelData(0), n = o.length;
+        const p = ex.audio(n), s = new Int16Array(mem(), p, n);
+        for (let i = 0; i < n; i++) o[i] = s[i] / 32768;
+      };
+      node.connect(actx.destination);
+    } catch (err) { actx = null; }
+  }
+
+  // fixed 60 Hz logic, render every animation frame
+  let last = performance.now(), acc = 0;
+  function frame(now) {
+    acc += Math.min(100, now - last); last = now;
+    let n = 0;
+    while (acc >= 1000 / 60 && n < 4) { acc -= 1000 / 60; n++; }   // display-frame clock; the game runs 54 ticks/s inside
+    if (n === 4) acc = 0;
+    if (n) {
+      ex.frame(touchBits | keyBits | padButtons(), n);
+      const p = ex.render(), fb = new Uint16Array(mem(), p, 266 * 240);
+      for (let i = 0; i < 266 * 240; i++) out[i] = lut[fb[i]];
+      ctx.putImageData(img, 0, 0);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

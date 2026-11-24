@@ -1,0 +1,29 @@
+{
+ "id": "rusty-iron-axe",
+ "game": "deep",
+ "prompt": "rusty iron axe",
+ "spec": {
+  "flags": [
+   "rusty"
+  ],
+  "kind": "axe",
+  "word": "axe",
+  "metal": "iron"
+ },
+ "seed": 791214,
+ "size": 64,
+ "engine": "CYCLES",
+ "understood": "Axe \u00b7 metal: iron \u00b7 rusty",
+ "ignored": [],
+ "note": "",
+ "parts": [
+  "Haft",
+  "Grip wrap",
+  "Axe head",
+  "Poll",
+  "Cap"
+ ],
+ "has_blend": true,
+ "time": 1795472391.6690052,
+ "seconds": 0.8
+}
