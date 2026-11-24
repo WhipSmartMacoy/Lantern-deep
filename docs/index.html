@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Lantern Deep</title>
+<meta name="description" content="An endless dungeon crawler. Play in your browser or on your phone.">
+<meta name="theme-color" content="#0d0c10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
   :root { --body:#1b1a1f; --edge:#2a2830; --btn:#34313b; --btn-on:#57505f; --ink:#cfc6b8; --dim:#7d7468; --amber:#f0b45a; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
@@ -37,8 +41,8 @@
 <div class="wrap">
   <div class="screen"><canvas id="c" width="266" height="240"></canvas></div>
   <div class="shoulders touch">
-    <button class="b sh" data-btn="256">L · SKILL 3</button>
-    <button class="b sh" data-btn="512">R · SKILL 4</button>
+    <button class="b sh" data-btn="256">L · SKILL 1</button>
+    <button class="b sh" data-btn="512">R · SKILL 2</button>
   </div>
   <div class="pad touch">
     <div class="dpad">
@@ -51,7 +55,7 @@
     <div class="mid">
       <button class="b pill" data-btn="16384">MAP</button>
       <button class="b pill" data-btn="32768">MENU</button>
-      <div class="lbl">A ATTACK/USE · B ROLL<br>X Y L R = SKILLS 1-4</div>
+      <div class="lbl">B ATTACK/USE · A ROLL<br>X Y POTIONS · L R SKILLS</div>
     </div>
     <div class="face">
       <button class="b f-x" data-btn="64">X</button>
@@ -61,8 +65,8 @@
     </div>
   </div>
   <div class="keys">
-    <b>Arrows/WASD</b> move · <b>J/Space</b> attack/use (A) · <b>K/Shift</b> roll (B)<br>
-    Skills: <b>1/U</b> (X) · <b>2/I</b> (Y) · <b>3/O</b> (L) · <b>4/P</b> (R) · <b>Enter/Esc</b> menu (Start) · <b>M/Tab</b> map (Select)<br>
+    <b>Arrows/WASD</b> move · <b>K/Shift</b> attack/use (B) · <b>J/Space</b> roll (A)<br>
+    Potions: <b>1/U</b> (X) · <b>2/I</b> (Y) · Skills: <b>3/O</b> (L) · <b>4/P</b> (R) · <b>Enter/Esc</b> menu (Start) · <b>M/Tab</b> map (Select)<br>
     A <b>game controller</b> works too: face buttons by position, as on the Pocket
   </div>
 </div>
